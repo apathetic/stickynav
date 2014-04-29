@@ -1,15 +1,25 @@
 {
   "name": "stickynav",
+  "title": "Sticky Nav",
   "version": "0.0.1",
   "description": "A simple navigation bar that efficiently attaches / detaches to the top of the viewport upon scrolling",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/apathetic/stickynav"
-  },
   "author": {
     "name": "Wes Hatch",
     "email": "whatch@hugeinc.com"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/apathetic/stickynav"
+  },
+  "bugs": {
+    "url": "https://github.com/apathetic/stickynav/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/apathetic/stickynav/blob/master/LICENSE-MIT"
+    }
+  ],
   "engines": {
     "node": ">= 0.6.0"
   },
