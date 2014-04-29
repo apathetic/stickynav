@@ -1,0 +1,28 @@
+{
+  "name": "stickynav",
+  "version": "0.0.1",
+  "description": "A simple navigation bar that efficiently attaches / detaches to the top of the viewport upon scrolling",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/apathetic/stickynav"
+  },
+  "author": {
+    "name": "Wes Hatch",
+    "email": "whatch@hugeinc.com"
+  },
+  "engines": {
+    "node": ">= 0.6.0"
+  },
+  "scripts": {
+    "test": "grunt qunit"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-connect": "~0.6.0",
+    "grunt-contrib-jshint": "~0.8.0",
+    "grunt-contrib-qunit": "^0.4.0",
+    "grunt-contrib-uglify": "^0.4.0",
+    "grunt-contrib-watch": "~0.5.3"
+  }
+}
