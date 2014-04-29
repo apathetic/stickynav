@@ -6,16 +6,16 @@
  * Licensed under the MIT license.
  */
 
-* { box-sizing: border-box; }
+* { box-sizing: border-box; padding:0; margin:0; }
 body, html { height:100%; font-size: 18px; line-height: 1.5; padding:0; margin:0; }
 ul, li { margin:0; padding:0; list-style:none; }
 hr { margin: 5em 0; }
-header { width:960px; margin: 0 auto; }
-section { width:960px; margin: 0 auto; padding-left:320px; }
-footer { height: 300px; background: #666; margin-top: 5em; }
+header { height:300px; background:#999; /*width:960px; margin:0 auto; */ }
+section { width:960px; margin:0 auto; padding-left:320px; margin-bottom:5em; }
+footer { height:300px; background: #666; margin-top: 5em; }
 
-
-header p { padding-left: 320px; }
+#sticky { position:relative; }
+section img { float:left; max-width:200px; padding-right:10px; }
 
 nav {
 	position: absolute;

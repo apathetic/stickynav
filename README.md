@@ -10,14 +10,19 @@ A simple navigation bar that efficiently attaches / detaches to the top of the v
 ## Getting Started
 Download the [production version][min] or the [development version][max].
 
-[min]: https://github.com/apathetic/stickynav/blob/master/dist/stickynav.min.js
+[min]: https://stash.hugeinc.com/projects/BOWER/repos/stickynav/browse/dist/stickynav.min.js?at=b524c3b74362a516cca1d7c3cde1be7e508480e3&raw
 [max]: https://github.com/apathetic/stickynav/blob/master/dist/stickynav.js
 
 Include the relevant scripts in your web page, and then:
 
 ```html
 <script>
-
+	stickyNav.init({
+		nav: '#sticky'
+		// navItem: 'td',
+		// active: 'selected',
+		// scrollSpeed
+	});
 </script>
 ```
 
@@ -33,7 +38,6 @@ Include the relevant scripts in your web page, and then:
 * Android
 
 ## Known Issues
-* mobile tranforms are currently webkit-only
 
 ## Examples
 

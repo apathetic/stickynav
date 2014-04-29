@@ -14,16 +14,14 @@
 <body>
 
 	<header>
-		<p>
-			content<br />content<br />content<br />content<br />content<br />content<br />content<br />content<br />content<br />content<br />content
-		</p>
-
-		<nav id="sticky">
-			<ul>
-			</ul>
- 		</nav>
-
+		<h1>Sticky Nav Demo</h1>
 	</header>
+
+	<div id="sticky">
+		<nav>
+			<ul></ul>
+		</nav>
+	</div>
 
 	<section id="about" data-nav="About Us">
 		<h2>About Us</h2>
@@ -80,6 +78,29 @@
 		We are very great and super important lorem ispum.</p>
 	</section>
 
+	<section id="features" data-nav="Features">
+		<h2>Features</h2>
+		<p>Useless filler Global adoption of mobile services has increased significantly over the last
+		few years. Taking advantage of this ever-growing trend is now more important
+		than ever; however, for our clients, it is merely a stepping stone.</p>
+		<p>We are very great and super important lorem ispum. We are very great and
+		<img src="http://malformed.ca/wesley.jpg" alt="" />
+		super important lorem ispum. We are very great and super important lorem ispum.
+		We are very great and super important lorem ispum.</p>
+		<p>Global adoption of mobile services has increased significantly over the last
+		few years. Taking advantage of this ever-growing trend is now more important
+		than ever; however, for our clients, it is merely a stepping stone.</p>
+		<p>We are very great and super important lorem ispum. We are very great and
+		super important lorem ispum. We are very great and super important lorem ispum.
+		We are very great and super important lorem ispum.</p>
+		<p>We are very great and super important lorem ispum. We are very great and
+		super important lorem ispum. We are very great and super important lorem ispum.
+		We are very great and super important lorem ispum.</p>
+		<p>We are very great and super important lorem ispum. We are very great and
+		super important lorem ispum. We are very great and super important lorem ispum.
+		We are very great and super important lorem ispum.</p>
+	</section>
+
 	<footer>
 
 	</footer>
@@ -88,7 +109,7 @@
 	<script src="../../dist/stickynav.min.js"></script>
 	<script>
 		stickyNav.init({
-			nav: '#sticky'
+			nav: '#sticky nav'
 			// navItem: 'td',
 			// active: 'selected',
 			// scrollSpeed
