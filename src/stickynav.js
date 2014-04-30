@@ -12,10 +12,11 @@ var stickyNav = (function($, window, undefined ) {
 
 	'use strict';
 
-	var sticky,	// = $(sticky)[0];
-		sections = $('[data-nav]'),
+	var sticky,
+		sections,
 		currentSection,
-		scrollPosition = window.pageYOffset,
+		// scrollPosition = window.pageYOffset,
+		// offsets = [],
 		timer,
 		bullets = $();
 
@@ -70,7 +71,6 @@ var stickyNav = (function($, window, undefined ) {
 	function setupPageNav() {
 
 		var nav = $(sticky).find('ul');
-			// offsets = [],
 
 		sections.each(function(i, section) {
 			var title = $(this).data('nav'),
@@ -85,7 +85,7 @@ var stickyNav = (function($, window, undefined ) {
 			});
 
 			bullets = bullets.add(bullet);
-			// offsets.push( $(section).offset().top );
+			// offsets.push( $(section).offset().top );		// previously stored all offsets, but this only works if sections are not dynamic
 			nav.append(bullet);
 
 		});
@@ -99,25 +99,23 @@ var stickyNav = (function($, window, undefined ) {
 	 */
 	function updateSelected() {
 		clearTimeout(timer);
-		scrollPosition = window.pageYOffset;
 		timer = window.setTimeout(checkSectionPosition, 100);
 
-		/*if(!scrolling) {
-			window.requestAnimationFrame(update); //requestAnimationFrame won't fire again till update function finishes.
-			scrolling = true;
-		}*/
+		/*
+		window.requestAnimationFrame(checkSectionPosition);
+		*/
 	}
 
 	/**
-	 * check each sections' getBoundingClientRect
-	 * to identify current viewing section
+	 * Check each section's getBoundingClientRect to determine which is active
 	 * @return {void}
 	 */
 	function checkSectionPosition() {
 
+		currentSection = undefined;		// reset
+
 		// start at end at work back
 		for (var i = sections.length; i--;) {
-			// if (sections.get(i).getBoundingClientRect().top <= 1) {
 			if ( ~~sections.get(i).getBoundingClientRect().top <= 0 ) {		// note: ~~ is Math.floor
 				currentSection = i;
 				break;
@@ -147,7 +145,8 @@ var stickyNav = (function($, window, undefined ) {
 		init: function(opts) {
 			// if(!core.Utils.isTouchDevice && sections.length > 0) {
 				sticky = $(opts.nav)[0];	// [TODO] add some checks or sumthing
-				if ( !sticky || !sticky.getBoundingClientRect) { return false; } // progressive enhancement for newer browers only.
+				sections = $('[data-nav]');
+				if ( !sections || !sticky || !sticky.getBoundingClientRect) { return false; } // progressive enhancement for newer browers only.
 
 				setupSticky();
 				setupPageNav();
