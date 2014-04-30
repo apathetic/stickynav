@@ -46,5 +46,5 @@ Please see the _test / demo_ directory
 ## Release History
 
 
-### 0.0.1
+### 0.1
 * initial commit
