@@ -8,72 +8,87 @@
  */
 
 
-var stickyNav = (function($, window, undefined ) {
 
-	'use strict';
+/**
+ * Sticky Element: sets up a sticky bar which attaches / detaches to top of viewport
+ * @param {HTMLElement} sticky The element to sticky-ify
+ * @return {void}
+ */
+function stickyElement(sticky, bounded) {
 
-	var sticky,
-		sections,
-		currentSection,
-		// scrollPosition = window.pageYOffset,
-		// offsets = [],
-		// timer,
-		ticking,
-		items = $();
-
-
-	/**
-	 * Sets up a sticky bar which attaches / detaches to top of viewport
-	 * @return {void}
-	 */
-	function setupSticky() {
-
-		// var body = document.body,		// $('body')[0],	// local reference
-		var offset,
-			position,
-			_currentState = '',
-			_stateSwitcher,
-			determine = {
-				normal: function() {
-					position = sticky.getBoundingClientRect();
-					if (position.top < 1 ) { return setState('sticky'); }
-				},
-				sticky: function() {
-					position = document.body.getBoundingClientRect();
-					if( position.top > offset ) { return setState('normal'); }
-				},
-				bottom: function() {
-					//
-					//
-				}
-			};
-
-		function setState (state){
-			if(_currentState == state) { return; }
-			$(sticky).removeClass(_currentState).addClass(state);
-			_currentState = state;
-			_stateSwitcher = determine[state];
-		}
-
-		position = sticky.getBoundingClientRect();
-		offset = -(position.top + window.scrollY);	// store original offset
-
-		//sticky initial position
-		if (window.pageYOffset > position.top) {
-			setState('sticky');
-		} else {
-			setState('normal');
-		}
-
-		//$(window).on({ 'scroll': function(){ _stateSwitcher() } });
-		window.addEventListener('scroll', function(){ _stateSwitcher(); });
+	if (!sticky || !sticky.getBoundingClientRect) {
+		return false;                                       // progressive enhancement for newer browers only.
 	}
+
+	bounded = bounded || sticky.getAttribute('data-bounded') || false;
+
+	var parent = sticky.parentNode,
+		stickyPosition,
+		parentPosition,
+		currentState = '',
+		stateSwitcher,
+		determine = {
+			normal: function() {
+				stickyPosition = sticky.getBoundingClientRect();
+				if (stickyPosition.top < 1) { return setState('sticky'); }
+			},
+			sticky: function() {
+				position = document.body.getBoundingClientRect();
+				if( position.top > offset ) { return setState('normal'); }
+			},
+			bottom: function() {
+				//
+				//
+			}
+		};
+
+	function setState (state){
+		if(_currentState == state) { return; }
+		$(sticky).removeClass(_currentState).addClass(state);
+		_currentState = state;
+		_stateSwitcher = determine[state];
+	}
+
+	position = sticky.getBoundingClientRect();
+	offset = -(position.top + window.scrollY);	// store original offset
+
+	//sticky initial position
+	if (window.pageYOffset > position.top) {
+		setState('sticky');
+	} else {
+		setState('normal');
+	}
+
+	//$(window).on({ 'scroll': function(){ _stateSwitcher() } });
+	window.addEventListener('scroll', function(){ _stateSwitcher(); });
+}
+
+
+var sectionNav = (function(handle, options) {
+
+	var sections = document.querySelectorAll('[data-nav]'),
+		nav = handle.querySelector('ul'),
+		items = [],     // document.createDocumentFragment(),  //[];
+		currentSection,
+		ticking,
+		offset = options.offset || 0,
+		bounded = options.bounded || false,
+		isScrolling = false;
+
+	generateMenu();         // TODO make into an option? ie whether to generate menu automatically or not?
+	checkSectionPosition();
+
+	Sprout.Components.stickyElement(handle, options.bounded);
+	window.addEventListener('scroll', updateSelected);
+
+
+	// SectionNav.prototype = {
 
 	/**
 	 * Generate the nav <li>'s and setup the Event Listeners
 	 * @return {void}
 	 */
-	function setupPageNav() {
+	function generateMenu() {
 
 		var nav = $(sticky).find('ul');
 
@@ -103,9 +118,7 @@ var stickyNav = (function($, window, undefined ) {
 	 * @return {void}
 	 */
 	function updateSelected() {
-		// clearTimeout(timer);
-		// timer = window.setTimeout(checkSectionPosition, 100);
-		if (!ticking) {
+		if (!ticking && !isScrolling) {
 			ticking = true;
 			window.requestAnimationFrame(checkSectionPosition);
 		}
@@ -116,11 +129,10 @@ var stickyNav = (function($, window, undefined ) {
 	 * @return {void}
 	 */
 	function checkSectionPosition() {
+		var i;
 
-		// currentSection = undefined;		// reset
-
-		// start at end at work back
-		for (var i = sections.length; i--;) {
+		// Find i. Start at end and work back
+		for (i = sections.length; i--;) {
 			if ( ~~sections.get(i).getBoundingClientRect().top <= 0 ) {		// note: ~~ is Math.floor
 				break;
 			}
@@ -131,6 +143,20 @@ var stickyNav = (function($, window, undefined ) {
 			items.removeClass('active');
 			items.eq(currentSection).addClass('active');
 		}
+		// if (i < 0) {
+        //     if (currentSection >= 0) {
+        //         $(items[currentSection]).removeClass('active');
+        //     }
+        //     currentSection = i;
+        // }
+        // else if (i !== currentSection) {
+        //     if (currentSection >= 0) {
+        //         $(items[currentSection]).removeClass('active');
+        //     }
+        //     $(items[i]).addClass('active');
+        //     currentSection = i;
+        // }
+
 
 		ticking = false;
 	}
@@ -158,12 +184,11 @@ var stickyNav = (function($, window, undefined ) {
 				if ( !sections || !sticky || !sticky.getBoundingClientRect) { return false; } // progressive enhancement for newer browers only.
 
 				setupSticky();
-				setupPageNav();
+				generateMenu();
 				checkSectionPosition();
 			// }
 		}
 	};
 
 
-}( jQuery, window ));
-
+}()));
