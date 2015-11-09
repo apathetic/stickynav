@@ -17,8 +17,9 @@ var stickyNav = (function($, window, undefined ) {
 		currentSection,
 		// scrollPosition = window.pageYOffset,
 		// offsets = [],
-		timer,
-		bullets = $();
+		// timer,
+		ticking,
+		items = $();
 
 
 	/**
@@ -33,13 +34,17 @@ var stickyNav = (function($, window, undefined ) {
 			_currentState = '',
 			_stateSwitcher,
 			determine = {
-				normal:function(){
+				normal: function() {
 					position = sticky.getBoundingClientRect();
 					if (position.top < 1 ) { return setState('sticky'); }
 				},
-				sticky:function(){
+				sticky: function() {
 					position = document.body.getBoundingClientRect();
 					if( position.top > offset ) { return setState('normal'); }
+				},
+				bottom: function() {
+					//
+					//
 				}
 			};
 
@@ -75,18 +80,18 @@ var stickyNav = (function($, window, undefined ) {
 		sections.each(function(i, section) {
 			var title = $(this).data('nav'),
 				id = $(this).attr('id') || '',
-				bullet = $('<li><a href="#'+id+'">'+ title + '</a></li>');	// [TODO]: option to use other elements ie. <td>
+				item = $('<li><a href="#'+id+'">'+ title + '</a></li>');	// [TODO]: option to use other elements ie. <td>
 
-			bullet.click(function(e) {
+			item.click(function(e) {
 				e.preventDefault();
-				bullets.removeClass();
+				items.removeClass();
 				$(this).addClass('active');
 				scrollPage(section);
 			});
 
-			bullets = bullets.add(bullet);
+			items = items.add(item);
 			// offsets.push( $(section).offset().top );		// previously stored all offsets, but this only works if sections are not dynamic
-			nav.append(bullet);
+			nav.append(item);
 
 		});
 
@@ -98,12 +103,12 @@ var stickyNav = (function($, window, undefined ) {
 	 * @return {void}
 	 */
 	function updateSelected() {
-		clearTimeout(timer);
-		timer = window.setTimeout(checkSectionPosition, 100);
-
-		/*
-		window.requestAnimationFrame(checkSectionPosition);
-		*/
+		// clearTimeout(timer);
+		// timer = window.setTimeout(checkSectionPosition, 100);
+		if (!ticking) {
+			ticking = true;
+			window.requestAnimationFrame(checkSectionPosition);
+		}
 	}
 
 	/**
@@ -112,18 +117,22 @@ var stickyNav = (function($, window, undefined ) {
 	 */
 	function checkSectionPosition() {
 
-		currentSection = undefined;		// reset
+		// currentSection = undefined;		// reset
 
 		// start at end at work back
 		for (var i = sections.length; i--;) {
 			if ( ~~sections.get(i).getBoundingClientRect().top <= 0 ) {		// note: ~~ is Math.floor
-				currentSection = i;
 				break;
 			}
 		}
 
-		bullets.removeClass('active');
-		bullets.eq(currentSection).addClass('active');
+		if (i !== currentSection) {
+			currentSection = i;
+			items.removeClass('active');
+			items.eq(currentSection).addClass('active');
+		}
+
+		ticking = false;
 	}
 
 	/**
