@@ -6,19 +6,6 @@
  * Licensed under the MIT license.
  */
 
-* { box-sizing: border-box; padding:0; margin:0; }
-body, html { height:100%; font-size: 18px; line-height: 1.5; padding:0; margin:0; }
-ul, li { margin:0; padding:0; list-style:none; }
-hr { margin: 5em 0; }
-header { height:300px; background:#999; /*width:960px; margin:0 auto; */ }
-main { position:relative; }
-section { margin-bottom:5em; }
-footer { height:300px; background: #666; margin-top: 5em; }
-
-.container { width:960px; margin:0 auto; padding-left:320px; }
-
-section img { float:left; max-width:200px; padding-right:10px; }
-
 /* -------------------------------------
 		NAV STYLES
 ------------------------------------- */
@@ -42,10 +29,8 @@ nav.sticky {
 nav .container {
 	padding:0;
 }
+
 nav ul {
-/*	width: 960px;
-	margin: 0 auto;
-*/
 	display: inline-block;
 	width: auto;
 	height: 192px;
@@ -72,30 +57,3 @@ nav a {
 nav .active a {
 	color: orange;
 }
-
-
-
-/* -------------------------------------
-		CALLOUTS
-------------------------------------- */
-
-.callout {
-	background: #dddddd;
-	min-height: 200px;
-	padding: 100px;
-	margin: 2em 0;
-	z-index: 100;
-	position: relative;
-
-	/* BOOM - the magic */
-	/* 100% of viewport width. no support for IE8, tho'. But, this is a progressive enhancement */
-	/*
-	width: 100vw;
-    margin-left: -50vw;
-    left: 50%;
-    position: relative;
-	*/
-	/* </boom> */
-}
-
-

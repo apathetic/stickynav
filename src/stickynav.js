@@ -17,7 +17,7 @@
 function stickyElement(sticky, bounded) {
 
 	if (!sticky || !sticky.getBoundingClientRect) {
-		return false;                                       // progressive enhancement for newer browers only.
+		return false;									   // progressive enhancement for newer browers only.
 	}
 
 	bounded = bounded || sticky.getAttribute('data-bounded') || false;
@@ -25,64 +25,62 @@ function stickyElement(sticky, bounded) {
 	var parent = sticky.parentNode,
 		stickyPosition,
 		parentPosition,
-		currentState = '',
+		currentState = '_',
 		stateSwitcher,
 		determine = {
-			normal: function() {
+			normal:function(){
 				stickyPosition = sticky.getBoundingClientRect();
 				if (stickyPosition.top < 1) { return setState('sticky'); }
 			},
-			sticky: function() {
-				position = document.body.getBoundingClientRect();
-				if( position.top > offset ) { return setState('normal'); }
+			sticky:function(){
+				parentPosition = parent.getBoundingClientRect();
+				if (parentPosition.top > 1) { return setState('normal'); }
+				if (!bounded) { return; }   // don't worry about bottom edge
+				stickyPosition = sticky.getBoundingClientRect();
+				if (parentPosition.bottom < stickyPosition.bottom) { return setState('bottom'); }
 			},
-			bottom: function() {
-				//
-				//
+			bottom: function(){
+				stickyPosition = sticky.getBoundingClientRect();
+				if (stickyPosition.top > 1) { return setState('sticky'); }
 			}
 		};
 
 	function setState (state){
-		if(_currentState == state) { return; }
-		$(sticky).removeClass(_currentState).addClass(state);
-		_currentState = state;
-		_stateSwitcher = determine[state];
+		if (currentState === state) { return; }
+		sticky.classList.remove(currentState);
+		sticky.classList.add(state);
+		currentState = state;
+		stateSwitcher = determine[state];
 	}
 
-	position = sticky.getBoundingClientRect();
-	offset = -(position.top + window.scrollY);	// store original offset
+	stickyPosition = sticky.getBoundingClientRect();
 
 	//sticky initial position
-	if (window.pageYOffset > position.top) {
+	if (stickyPosition.top < 1) {
 		setState('sticky');
+		stateSwitcher();		// edge case: check if bottom of sticky collides w/ bounding container
 	} else {
 		setState('normal');
 	}
 
-	//$(window).on({ 'scroll': function(){ _stateSwitcher() } });
-	window.addEventListener('scroll', function(){ _stateSwitcher(); });
+	// window.addEventListener('scroll', stateSwitcher);
+	window.addEventListener('scroll', function(){ stateSwitcher(); });	// stateSwitcher changes, so cannot pass (ie. bind directly) here
+	window.addEventListener('resize', function(){ stateSwitcher(); });
 }
 
 
-var sectionNav = (function(handle, options) {
 
-	var sections = document.querySelectorAll('[data-nav]'),
-		nav = handle.querySelector('ul'),
-		items = [],     // document.createDocumentFragment(),  //[];
+
+
+var stickyNav = (function() {
+
+	var handle,
+		sections;
+
+	var items = [],
 		currentSection,
 		ticking,
-		offset = options.offset || 0,
-		bounded = options.bounded || false,
 		isScrolling = false;
-
-	generateMenu();         // TODO make into an option? ie whether to generate menu automatically or not?
-	checkSectionPosition();
-
-	Sprout.Components.stickyElement(handle, options.bounded);
-	window.addEventListener('scroll', updateSelected);
-
-
-	// SectionNav.prototype = {
 
 	/**
 	 * Generate the nav <li>'s and setup the Event Listeners
@@ -90,34 +88,34 @@ var sectionNav = (function(handle, options) {
 	 */
 	function generateMenu() {
 
-		var nav = $(sticky).find('ul');
+		var nav = handle.querySelector('ul');
 
-		sections.each(function(i, section) {
-			var title = $(this).data('nav'),
-				id = $(this).attr('id') || '',
-				item = $('<li><a href="#'+id+'">'+ title + '</a></li>');	// [TODO]: option to use other elements ie. <td>
+		Array.prototype.forEach.call(sections, function(section) {
+			var title = section.getAttribute('data-nav'),
+				id = section.id || '',
+				item = document.createElement('li');
 
+			item.innerHTML = '<a href="#'+id+'">'+ title + '</a>';
 			item.click(function(e) {
 				e.preventDefault();
-				items.removeClass();
-				$(this).addClass('active');
+				items.forEach(function(item) { item.className = ''; });
+				this.classList.add('active');
 				scrollPage(section);
 			});
 
-			items = items.add(item);
-			// offsets.push( $(section).offset().top );		// previously stored all offsets, but this only works if sections are not dynamic
-			nav.append(item);
+			items.push(item);
+			nav.appendChild(item);
 
 		});
 
-		window.addEventListener('scroll', updateSelected);
+		window.addEventListener('scroll', updateSelectedItem);
 	}
 
 	/**
 	 * Update the active nav item on window.scroll
 	 * @return {void}
 	 */
-	function updateSelected() {
+	function updateSelectedItem() {
 		if (!ticking && !isScrolling) {
 			ticking = true;
 			window.requestAnimationFrame(checkSectionPosition);
@@ -133,30 +131,30 @@ var sectionNav = (function(handle, options) {
 
 		// Find i. Start at end and work back
 		for (i = sections.length; i--;) {
-			if ( ~~sections.get(i).getBoundingClientRect().top <= 0 ) {		// note: ~~ is Math.floor
+			if ( ~~sections[i].getBoundingClientRect().top <= 0 ) {		// note: ~~ is Math.floor
 				break;
 			}
 		}
 
-		if (i !== currentSection) {
-			currentSection = i;
-			items.removeClass('active');
-			items.eq(currentSection).addClass('active');
-		}
-		// if (i < 0) {
-        //     if (currentSection >= 0) {
-        //         $(items[currentSection]).removeClass('active');
-        //     }
-        //     currentSection = i;
-        // }
-        // else if (i !== currentSection) {
-        //     if (currentSection >= 0) {
-        //         $(items[currentSection]).removeClass('active');
-        //     }
-        //     $(items[i]).addClass('active');
-        //     currentSection = i;
-        // }
+		// if (i !== currentSection) {
+		// 	currentSection = i;
+		// 	items.forEach(function(item) { item.classList.remove('active'); });
+		// 	items[currentSection].classList.add('active');
+		// }
 
+		if (i < 0) {
+			 if (currentSection >= 0) {
+			 	items[currentSection].classList.remove('active');
+			 }
+			 currentSection = i;
+		}
+		else if (i !== currentSection) {
+			if (currentSection >= 0) {
+				 items[currentSection].classList.remove('active');
+			}
+			currentSection = i;
+			items[i].classList.add('active');
+		}
 
 		ticking = false;
 	}
@@ -166,29 +164,66 @@ var sectionNav = (function(handle, options) {
 	 * @param  {string} to	id of the element to scroll to
 	 * @return {void}
 	 */
-	function scrollPage(to) {
-		if ($(to).length) {
-			$('html, body').animate({
-				scrollTop: $(to).offset().top
-			}, 500);
+	function scrollPage(to, offset, callback) {
+
+		var root = /firefox|trident/i.test(navigator.userAgent) ? document.documentElement : document.body;
+
+		offset = offset || 0;
+
+		var duration = 500;
+
+		var startTime,
+			startPos = root.scrollTop,
+			endPos = ~~(to.getBoundingClientRect().top - offset),
+			maxScroll = root.scrollHeight,// - window.innerHeight,
+			scrollEndValue = startPos + endPos < maxScroll ? endPos : maxScroll - startPos;
+
+		function easeInOutCubic(t, b, c, d) {
+			if ((t/=d/2) < 1) { return c/2*t*t*t + b; }
+			return c/2*((t-=2)*t*t + 2) + b;
 		}
+
+		function scroll(timestamp) {
+			 startTime = startTime || timestamp;
+			 var elapsed = timestamp - startTime;
+			 var progress = easeInOutCubic(elapsed, startPos, scrollEndValue, duration);
+			 root.scrollTop = progress;
+
+			 if (elapsed < duration) {
+				 requestAnimationFrame(scroll);
+			 }
+		 }
+
+		 requestAnimationFrame(scroll);
+
+		 if (typeof callback === 'function') {
+			 window.setTimeout( callback, duration );
+		 }
 	}
 
 
 
 	return {
-		init: function(opts) {
-			// if(!core.Utils.isTouchDevice && sections.length > 0) {
-				sticky = $(opts.nav)[0];	// [TODO] add some checks or sumthing
-				sections = $('[data-nav]');
-				if ( !sections || !sticky || !sticky.getBoundingClientRect) { return false; } // progressive enhancement for newer browers only.
+		init: function(options) {
 
-				setupSticky();
-				generateMenu();
-				checkSectionPosition();
-			// }
+			options = options || {};
+
+			sections = document.querySelectorAll('[data-nav]');
+			handle = document.querySelector(options.nav);
+
+			if ( !sections || !handle ) { return false; }
+
+			var offset = options.offset || 0,
+				bounded = options.bounded || false;
+
+			generateMenu();
+			checkSectionPosition();
+			stickyElement(handle, bounded);
+
+			window.addEventListener('scroll', updateSelectedItem);
+
 		}
 	};
 
 
-}()));
+})();
