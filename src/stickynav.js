@@ -96,7 +96,7 @@ var stickyNav = (function() {
 				item = document.createElement('li');
 
 			item.innerHTML = '<a href="#'+id+'">'+ title + '</a>';
-			item.click(function(e) {
+			item.addEventListener('click', function(e) {
 				e.preventDefault();
 				items.forEach(function(item) { item.className = ''; });
 				this.classList.add('active');
@@ -166,17 +166,13 @@ var stickyNav = (function() {
 	 */
 	function scrollPage(to, offset, callback) {
 
-		var root = /firefox|trident/i.test(navigator.userAgent) ? document.documentElement : document.body;
-
 		offset = offset || 0;
 
+		var root = document.body;
 		var duration = 500;
-
 		var startTime,
 			startPos = root.scrollTop,
-			endPos = ~~(to.getBoundingClientRect().top - offset),
-			maxScroll = root.scrollHeight,// - window.innerHeight,
-			scrollEndValue = startPos + endPos < maxScroll ? endPos : maxScroll - startPos;
+			endPos = ~~(to.getBoundingClientRect().top - offset);
 
 		function easeInOutCubic(t, b, c, d) {
 			if ((t/=d/2) < 1) { return c/2*t*t*t + b; }
@@ -184,23 +180,20 @@ var stickyNav = (function() {
 		}
 
 		function scroll(timestamp) {
-			 startTime = startTime || timestamp;
-			 var elapsed = timestamp - startTime;
-			 var progress = easeInOutCubic(elapsed, startPos, scrollEndValue, duration);
-			 root.scrollTop = progress;
-
-			 if (elapsed < duration) {
+			startTime = startTime || timestamp;
+			var elapsed = timestamp - startTime;
+			root.scrollTop = easeInOutCubic(elapsed, startPos, endPos, duration);
+			if (elapsed < duration) {
 				 requestAnimationFrame(scroll);
-			 }
+			} else {
+				isScrolling = false;
+				// callback.call(to);
+			}
 		 }
 
+		 isScrolling = true;
 		 requestAnimationFrame(scroll);
-
-		 if (typeof callback === 'function') {
-			 window.setTimeout( callback, duration );
-		 }
 	}
-
 
 
 	return {
@@ -215,6 +208,7 @@ var stickyNav = (function() {
 
 			var offset = options.offset || 0,
 				bounded = options.bounded || false;
+				// onScroll = options.onScroll \| false
 
 			generateMenu();
 			checkSectionPosition();

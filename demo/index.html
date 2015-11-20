@@ -8,15 +8,14 @@
 	<meta name="viewport" content="width=device-width">
 
 	<link rel="stylesheet" href="showcase-styles.css">
-	<link rel="stylesheet" href="../src/stickynav.css">
 	<link rel="stylesheet" href="styles.css">
-	<script src="../dist/stickynav.min.js"></script>
+	<script src="../src/stickynav.js"></script>
 
 	<!-- demo stuffs -->
 	<link rel="stylesheet" href="showcase-styles.css">
 	<script>
 		window.addEventListener('DOMContentLoaded', function() {
-			stickyNav.init({ nav: '#sticky nav' });
+			stickyNav.init({ nav: '#sticky' });
 		});
 	</script>
 	<!-- end demo stuffs -->
@@ -24,9 +23,15 @@
 </head>
 
 <body>
+
+
+	<header>
+		<h1>Sticky Nav.</h1>
+	</header>
+
 	<nav>
-		<div class="container">
-			<div id="sticky">
+		<div id="sticky">
+			<div class="container">
 				<nav data-autogenerate="true">
 					<ul></ul>
 				</nav>
@@ -37,160 +42,152 @@
 	<main class="site left-rail">
 
 		<section data-nav="About" id="about">
-			<h2>About</h2>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-			quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-			consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-			cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-			proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-			<p>We are very great and super important lorem ispum. We are very great and
-			super important lorem ispum. We are very great and super important lorem ispum.
-			We are very great and super important lorem ispum.</p>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-			quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-			consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-			cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-			proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-			<p>We are very great and super important lorem ispum. We are very great and
-			super important lorem ispum. We are very great and super important lorem ispum.
-			We are very great and super important lorem ispum.</p>
+			<div class="container">
+				<h2>About</h2>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+				quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+				consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+				cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+				proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+				<p>We are very great and super important lorem ispum. We are very great and
+				super important lorem ispum. We are very great and super important lorem ispum.
+				We are very great and super important lorem ispum.</p>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+				quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+				consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+				cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+				proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+				<p>We are very great and super important lorem ispum. We are very great and
+				super important lorem ispum. We are very great and super important lorem ispum.
+				We are very great and super important lorem ispum.</p>
+			</div>
 		</section>
 
 		<section data-nav="Download"id="download" >
-			<h2>Download</h2>
-			<p><a href="https://github.com/apathetic/stickynav">Github repo</a></p>
+			<div class="container">
+				<h2>Download</h2>
+				<p><a href="https://github.com/apathetic/stickynav">Github repo</a></p>
+			</div>
 		</section>
 
 		<section data-nav="Funding" id="funding" class="filler">
-			<h2>Funding</h2>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-			quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-			consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-			cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-			proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-			<p>Global adoption of mobile services has increased significantly over the last
-			few years. Taking advantage of this ever-growing trend is now more important
-			than ever; however, for our clients, it is merely a stepping stone.</p>
-			<p>We are very great and super important lorem ispum. We are very great and
-			super important lorem ispum. We are very great and super important lorem ispum.
-			We are very great and super important lorem ispum.</p>
+			<div class="container">
+				<h2>Funding</h2>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+				quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+				consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+				cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+				proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+				<p>Global adoption of mobile services has increased significantly over the last
+				few years. Taking advantage of this ever-growing trend is now more important
+				than ever; however, for our clients, it is merely a stepping stone.</p>
+				<p>We are very great and super important lorem ispum. We are very great and
+				super important lorem ispum. We are very great and super important lorem ispum.
+				We are very great and super important lorem ispum.</p>
+			</div>
 		</section>
 
 		<section data-nav="Clients" id="clients" class="filler">
-			<h2>Clients</h2>
-			<p>Useless filler Global adoption of mobile services has increased significantly over the last
-			few years. Taking advantage of this ever-growing trend is now more important
-			than ever; however, for our clients, it is merely a stepping stone.</p>
-			<p>We are very great and super important lorem ispum. We are very great and
-			<img src="http://malformed.ca/wesley.jpg" alt="" />
-			super important lorem ispum. We are very great and super important lorem ispum.
-			We are very great and super important lorem ispum.</p>
-			<p>Global adoption of mobile services has increased significantly over the last
-			few years. Taking advantage of this ever-growing trend is now more important
-			than ever; however, for our clients, it is merely a stepping stone.</p>
-			<p>We are very great and super important lorem ispum. We are very great and
-			super important lorem ispum. We are very great and super important lorem ispum.
-			We are very great and super important lorem ispum.</p>
-			<p>We are very great and super important lorem ispum. We are very great and
-			super important lorem ispum. We are very great and super important lorem ispum.
-			We are very great and super important lorem ispum.</p>
-			<p>We are very great and super important lorem ispum. We are very great and
-			super important lorem ispum. We are very great and super important lorem ispum.
-			We are very great and super important lorem ispum.</p>
+			<div class="container">
+				<h2>Clients</h2>
+				<p>Useless filler Global adoption of mobile services has increased significantly over the last
+				few years. Taking advantage of this ever-growing trend is now more important
+				than ever; however, for our clients, it is merely a stepping stone.</p>
+				<p>We are very great and super important lorem ispum. We are very great and
+				<img src="http://malformed.ca/wesley.jpg" alt="" />
+				super important lorem ispum. We are very great and super important lorem ispum.
+				We are very great and super important lorem ispum.</p>
+				<p>Global adoption of mobile services has increased significantly over the last
+				few years. Taking advantage of this ever-growing trend is now more important
+				than ever; however, for our clients, it is merely a stepping stone.</p>
+				<p>We are very great and super important lorem ispum. We are very great and
+				super important lorem ispum. We are very great and super important lorem ispum.
+				We are very great and super important lorem ispum.</p>
+				<p>We are very great and super important lorem ispum. We are very great and
+				super important lorem ispum. We are very great and super important lorem ispum.
+				We are very great and super important lorem ispum.</p>
+				<p>We are very great and super important lorem ispum. We are very great and
+				super important lorem ispum. We are very great and super important lorem ispum.
+				We are very great and super important lorem ispum.</p>
+			</div>
 		</section>
 
 		<section data-nav="Partners" id="partners" class="filler">
-			<h2>Partners</h2>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-			quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-			consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-			cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-			proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-			<p>Global adoption of mobile services has increased significantly over the last
-			few years. Taking advantage of this ever-growing trend is now more important
-			than ever; however, for our clients, it is merely a stepping stone.</p>
-			<p>We are very great and super important lorem ispum. We are very great and
-			super important lorem ispum. We are very great and super important lorem ispum.
-			We are very great and super important lorem ispum.</p>
+			<div class="container">
+				<h2>Partners</h2>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+				quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+				consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+				cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+				proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+				<p>Global adoption of mobile services has increased significantly over the last
+				few years. Taking advantage of this ever-growing trend is now more important
+				than ever; however, for our clients, it is merely a stepping stone.</p>
+				<p>We are very great and super important lorem ispum. We are very great and
+				super important lorem ispum. We are very great and super important lorem ispum.
+				We are very great and super important lorem ispum.</p>
+			</div>
 		</section>
 
 		<section data-nav="Prereqs" id="prereqs">
-			<h2>Prereqs</h2>
-			<p>none</p>
+			<div class="container">
+				<h2>Prereqs</h2>
+				<p>none</p>
+			</div>
 		</section>
 
 		<section data-nav="Compatibility" id="compatibility">
-			<h2>Compatibility</h2>
-			<ul>
-				<li>IE8+</li>
-				<li>Firefox, Chrome, Opera</li>
-			</ul>
+			<div class="container">
+				<h2>Compatibility</h2>
+				<ul>
+					<li>IE8+</li>
+					<li>Firefox, Chrome, Opera</li>
+				</ul>
+			</div>
 		</section>
 
 		<section data-nav="Code" id="code">
-			<h2>Code</h2>
-			{% highlight javascript %}
-			stickyNav.init({
-				nav: '#sticky'
-			});
-			{% endhighlight %}
+			<div class="container">
+				<h2>Code</h2>
+				{% highlight javascript %}
+				stickyNav.init({
+					nav: '#sticky'
+				});
+				{% endhighlight %}
+			</div>
 		</section>
 
 		<section data-nav="Options" id="options">
-			<h2>Options</h2>
-			<div class="table-responsive">
-				<table class="table table-bordered table-striped">
-					<thead>
-						<tr>
-							<th style="width: 100px;">Name</th>
-							<th style="width: 50px;">type</th>
-							<th style="width: 50px;">default</th>
-							<th>description</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>nav</td>
-							<td>string</td>
-							<td></td>
-							<td>query selector of the nav container <span class="color:red">(required)</span> </td>
-						</tr>
-						<!--
-						<tr>
-							<td>navItem</td>
-							<td>string</td>
-							<td>li</td>
-							<td>element to use when building the navigation</td>
-						</tr>
-						<tr>
-							<td>active</td>
-							<td>string</td>
-							<td>active</td>
-							<td>class to use on active nav item</td>
-						</tr>
-						<tr>
-							<td>scrollSpeed</td>
-							<td>integer</td>
-							<td>500</td>
-							<td>Speed of scrolling transitions between page sections</td>
-						</tr>
-						-->
-					</tbody>
-				</table>
+			<div class="container">
+				<h2>Options</h2>
+				<div class="table-responsive">
+					<table class="table table-bordered table-striped">
+						<thead>
+							<tr>
+								<th style="width: 100px;">Name</th>
+								<th style="width: 50px;">type</th>
+								<th style="width: 50px;">default</th>
+								<th>description</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>nav</td>
+								<td>string</td>
+								<td></td>
+								<td>query selector of the nav container <span class="color:red">(required)</span> </td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</section>
 
+	</main>
 
-		<footer>
-			<div class="container">
-			</div>
-		</footer>
-
-
-	</body>
-
-	</html>
+</body>
+</html>
