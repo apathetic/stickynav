@@ -136,25 +136,15 @@ var stickyNav = (function() {
 			}
 		}
 
-		// if (i !== currentSection) {
-		// 	currentSection = i;
-		// 	items.forEach(function(item) { item.classList.remove('active'); });
-		// 	items[currentSection].classList.add('active');
-		// }
-
-		if (i < 0) {
-			 if (currentSection >= 0) {
-			 	items[currentSection].classList.remove('active');
-			 }
-			 currentSection = i;
-		}
-		else if (i !== currentSection) {
-			if (currentSection >= 0) {
-				 items[currentSection].classList.remove('active');
+		// Add active class to currentSection, or remove if nothing is currently active
+		if (i !== currentSection) {
+			items.forEach(function(item) { item.classList.remove('active'); });
+			if (i >= 0) {
+				items[i].classList.add('active');
 			}
 			currentSection = i;
-			items[i].classList.add('active');
 		}
+
 
 		ticking = false;
 	}
