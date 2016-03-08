@@ -21,7 +21,8 @@ import { stickyElement, stickyNav } from '../src/stickynav.es6.js';
 ### CommonJS
 ```javascript
 var stickyElement = require('../src/stickynav.es6.js').stickyElement;
-var stickyNav = require('../src/stickynav.es6.js').stickyNav; ```
+var stickyNav = require('../src/stickynav.es6.js').stickyNav;
+```
 
 ### AMD
 ```javascript
