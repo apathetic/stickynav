@@ -2,7 +2,7 @@
 
 A simple navigation bar that efficiently attaches / detaches to the top of the viewport upon scrolling
 
-##Introduction
+## Introduction
 
 ...
 
@@ -13,15 +13,30 @@ Download the [production version][min] or the [development version][max].
 [min]: https://stash.hugeinc.com/projects/BOWER/repos/stickynav/browse/dist/stickynav.min.js?at=b524c3b74362a516cca1d7c3cde1be7e508480e3&raw
 [max]: https://github.com/apathetic/stickynav/blob/master/dist/stickynav.js
 
-Include the relevant scripts in your web page, and then:
+### ES6
+```javascript
+import { stickyElement, stickyNav } from '../src/stickynav.es6.js';
+```
+
+### CommonJS
+```javascript
+var stickyElement = require('../src/stickynav.es6.js').stickyElement;
+var stickyNav = require('../src/stickynav.es6.js').stickyNav; ```
+
+### AMD
+```javascript
+require(['stickyElement', 'stickyNav'], function(stickyElement, stickyNav){
+	// ...
+})
+```
+
+### Browser
 
 ```html
+<script src="path/to/stickyNav.js"></script>
 <script>
-	stickyNav.init({
+	new stickyNav({
 		nav: '#sticky'
-		// navItem: 'td',
-		// active: 'selected',
-		// scrollSpeed
 	});
 </script>
 ```
