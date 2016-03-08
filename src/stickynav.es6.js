@@ -2,7 +2,7 @@
  * sticky nav
  * https://github.com/apathetic/stickynav
  *
- * Copyright (c) 2013 Wes Hatch
+ * Copyright (c) 2013, 2016 Wes Hatch
  * Licensed under the MIT license.
  *
  */
@@ -71,54 +71,46 @@ export function stickyElement(sticky, bounded) {
 
 
 
-
-export var stickyNav = (function() {
-
-	var handle,
-		sections;
-
-	var items = [],
-		currentSection,
-		ticking,
-		isScrolling = false;
+/**
+ * Sticky Nav: creates a sticky side navigation using data- attributes from the page
+ * @return ....
+ */
+export class stickyNav {
 
 	/**
 	 * Generate the nav <li>'s and setup the Event Listeners
 	 * @return {void}
 	 */
-	function generateMenu() {
+	generateMenu() {
+		var nav = this.handle.querySelector('ul');
 
-		var nav = handle.querySelector('ul');
-
-		Array.prototype.forEach.call(sections, function(section) {
-			var title = section.getAttribute('data-nav'),
+		Array.from(this.sections, (section) => {
+			let title = section.getAttribute('data-nav'),
 				id = section.id || '',
 				item = document.createElement('li');
 
 			item.innerHTML = '<a href="#'+id+'">'+ title + '</a>';
-			item.addEventListener('click', function(e) {
+			item.addEventListener('click', (e) => {
 				e.preventDefault();
-				items.forEach( item => item.className = '' );
-				this.classList.add('active');
-				scrollPage(section);
+				this.items.forEach((itm) => { itm.className = ''; });
+				item.classList.add('active');
+				this.scrollPage(section);
 			});
 
-			items.push(item);
+			this.items.push(item);
 			nav.appendChild(item);
 
 		});
-
-		window.addEventListener('scroll', updateSelectedItem);
 	}
 
 	/**
 	 * Update the active nav item on window.scroll
 	 * @return {void}
 	 */
-	function updateSelectedItem() {
-		if (!ticking && !isScrolling) {
-			ticking = true;
-			window.requestAnimationFrame(checkSectionPosition);
+	updateSelectedItem() {
+		if (!this.ticking && !this.isScrolling) {
+			this.ticking = true;
+			requestAnimationFrame(this.checkSectionPosition.bind(this));
 		}
 	}
 
@@ -126,27 +118,26 @@ export var stickyNav = (function() {
 	 * Check each section's getBoundingClientRect to determine which is active
 	 * @return {void}
 	 */
-	function checkSectionPosition() {
-		var i;
+	checkSectionPosition() {
+		var i = this.sections.length;		// don't use "let" as we need "i", below
 
 		// Find i. Start at end and work back
-		for (i = sections.length; i--;) {
-			if ( ~~sections[i].getBoundingClientRect().top <= 0 ) {		// note: ~~ is Math.floor
+		for (i; i--;) {
+			if ( ~~this.sections[i].getBoundingClientRect().top <= 0 ) {		// note: ~~ is Math.floor
 				break;
 			}
 		}
 
 		// Add active class to currentSection, or remove if nothing is currently active
-		if (i !== currentSection) {
-			items.forEach( item => item.classList.remove('active') );
+		if (i !== this.currentSection) {
+			this.items.forEach((item) => { item.classList.remove('active'); });
 			if (i >= 0) {
-				items[i].classList.add('active');
+				this.items[i].classList.add('active');
 			}
-			currentSection = i;
+			this.currentSection = i;
 		}
 
-
-		ticking = false;
+		this.ticking = false;
 	}
 
 	/**
@@ -154,12 +145,13 @@ export var stickyNav = (function() {
 	 * @param  {string} to	id of the element to scroll to
 	 * @return {void}
 	 */
-	function scrollPage(to, offset, callback) {
+	scrollPage(to, offset, callback) {
 
 		offset = offset || 0;
 
 		var root = document.body;
 		var duration = 500;
+		var self = this;
 		var startTime,
 			startPos = root.scrollTop,
 			endPos = ~~(to.getBoundingClientRect().top - offset);
@@ -176,37 +168,38 @@ export var stickyNav = (function() {
 			if (elapsed < duration) {
 				 requestAnimationFrame(scroll);
 			} else {
-				isScrolling = false;
+				self.isScrolling = false;
 				// callback.call(to);
 			}
 		 }
 
-		 isScrolling = true;
+		 this.isScrolling = true;
 		 requestAnimationFrame(scroll);
 	}
 
 
-	return {
-		init: function(options) {
+	constructor(options={}) {
 
-			options = options || {};
+		this.items = [];
+		this.ticking = false;
+		this.isScrolling = false;
+		this.currentSection = null;
+		this.sections = document.querySelectorAll('[data-nav]');
+		this.handle = document.querySelector(options.nav);
 
-			sections = document.querySelectorAll('[data-nav]');
-			handle = document.querySelector(options.nav);
+		if ( !this.sections || !this.handle ) { return false; }
 
-			if ( !sections || !handle ) { return false; }
+		var bounded = options.bounded || false;
+			// offset = options.offset || 0,
+			// onScroll = options.onScroll \| false
 
-			var offset = options.offset || 0,
-				bounded = options.bounded || false;
-				// onScroll = options.onScroll \| false
+		this.generateMenu();
+		this.checkSectionPosition();
 
-			generateMenu();
-			checkSectionPosition();
-			stickyElement(handle, bounded);
+		stickyElement(this.handle, bounded);
 
-			window.addEventListener('scroll', updateSelectedItem);
+		window.addEventListener('scroll', this.updateSelectedItem.bind(this));
+	}
 
-		}
-	};
 
-})();
+}

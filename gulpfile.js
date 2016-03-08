@@ -1,5 +1,9 @@
 var gulp		= require('gulp');
 var del			= require('del');
+var browserify	= require('browserify');
+var babel		= require('babelify');
+var source		= require('vinyl-source-stream');
+var buffer		= require('vinyl-buffer');
 var uglify		= require('gulp-uglify');
 var jshint		= require('gulp-jshint');
 var rename		= require('gulp-rename');
@@ -8,7 +12,7 @@ var karma		= require('karma');
 
 var PATHS = {
 	css: ['src/*.css'],
-	js: ['src/*.js']
+	js: ['src/*.es6.js']
 };
 
 var JSHINTRC = {
@@ -40,11 +44,22 @@ var KARMACONF = {
 };
 
 
+// gulp.task('dist', function() {
+// 	return gulp.src(PATHS.js)
+// 		.pipe(jshint(JSHINTRC))
+// 		.pipe(uglify())
+// 		.pipe(rename({ extname: '.min.js' }))
+// 		.pipe(gulp.dest('./dist'));
+// });
+
 gulp.task('dist', function() {
-	return gulp.src(PATHS.js)
-		.pipe(jshint(JSHINTRC))
+	var bundler = browserify('src/shim.js', { debug: true }).transform(babel);
+
+	return bundler.bundle()
+		.pipe(source('stickynav.min.js'))
+		.pipe(buffer())
+		.pipe(jshint(JSHINTRC))		// eslint?
 		.pipe(uglify())
-		.pipe(rename({ extname: '.min.js' }))
 		.pipe(gulp.dest('./dist'));
 });
 

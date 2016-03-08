@@ -8,14 +8,14 @@
 	<meta name="viewport" content="width=device-width">
 
 	<link rel="stylesheet" href="styles.css">
-	<script src="../src/stickynav.js"></script>
+	<script src="../dist/stickynav.min.js"></script>
 
 	<!-- demo stuffs -->
 	<link rel="stylesheet" href="https://rawgit.com/apathetic/showcase/harp/www/css/styles.css">
 	<script src="prism.js"></script>
 	<script>
 		window.addEventListener('DOMContentLoaded', function() {
-			stickyNav.init({ nav: '#sticky' });
+			new stickyNav({ nav: '#sticky' });
 		});
 	</script>
 	<!-- end demo stuffs -->
@@ -154,7 +154,7 @@
 			<div class="container">
 				<h2>Code</h2>
 				<pre><code class="language-javascript">
-	stickyNav.init({
+	new stickyNav({
 		nav: '#sticky'
 	});
 			</code></pre>
