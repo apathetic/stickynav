@@ -57,7 +57,9 @@ function generate() {
       e.preventDefault();
       items.forEach((i) => { i.className = ''; });
       item.classList.add('active');
-      scrollPage(section);
+
+      isScrolling = true;
+      scrollPage(section, 0, () => { isScrolling = false });
     });
 
     items.push(item);
