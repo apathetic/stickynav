@@ -1,5 +1,3 @@
-import '@apatheticwes/scrollify';
-
 /*
  * Sticky
  * https://github.com/apathetic/stickynav/
@@ -75,6 +73,48 @@ Sticky.prototype.setState = function setState (state) {
   this.currentState = state;
   this.stateSwitcher = this[state]; // stateSwitcher will point at an internal fn
 };
+
+function easeInOutCubic(t, b, c, d) {
+  if ((t /= d / 2) < 1) { return c / 2 * t * t * t + b; }
+  return c / 2 * ((t -= 2) * t * t + 2) + b;
+}
+
+/**
+ * Scroll the page to a particular page anchor
+ * @param  {String} to: The id of the element to scroll to.
+ * @param  {Integer} offset: A scrolling offset.
+ * @param  {Function} callback: Function to apply after scrolling
+ * @return {void}
+ */
+function scrollPage(to, offset, callback) {
+  if ( offset === void 0 ) offset = 0;
+
+  var root = document.body;
+  var duration = 500;
+  var startTime;
+  var startPos = root.scrollTop;
+  var endPos = ~~(to.getBoundingClientRect().top - offset);
+
+  var scroll = function (timestamp) {
+    var elapsed;
+
+    startTime = startTime || timestamp;
+    elapsed = timestamp - startTime;
+    root.scrollTop = easeInOutCubic(elapsed, startPos, endPos, duration);
+
+    if (elapsed < duration) {
+      requestAnimationFrame(scroll);
+    } else {
+      callback.call(to);
+    }
+  };
+
+  requestAnimationFrame(scroll);
+}
+
+// import * as Scroll from '@apatheticwes/scrollify';
+
+console.log(Scroll.scrollPage);
 
 var handle;
 var sections;
