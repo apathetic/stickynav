@@ -7,10 +7,7 @@
  *
  */
 
-import Sticky from './sticky.js';
-// import * as Menu from './activeMenu.js';
-
-import * as Scroll from '@apatheticwes/scrollify';
+import ScrollPage from '@apatheticwes/scrollify';
 
 let handle;
 let sections;
@@ -20,30 +17,11 @@ let currentSection = null;
 let ticking = false;
 
 
-export default (options={}) => {
-  const offset = options.offset || 0;
-  const bounded = options.bounded || false;
-
-  handle = document.querySelector(options.nav);
-  sections = options.sections || document.querySelectorAll('[data-nav]');
-
-  if ( !sections || !handle ) { console.log('StickyNav: missing nav or nav sections.'); return false; }
-
-  new Sticky(handle, bounded);
-
-  generate();
-  checkSectionPosition();
-  window.addEventListener('scroll', updateActiveItem);
-}
-
-
-
-
 /**
  * Generate the nav <li>'s and setup the Event Listeners
  * @return {void}
  */
-function generate() {
+export function generate(handle, sections) {
   const nav = handle.querySelector('ul');
 
   Array.from(sections, (section) => {
@@ -69,7 +47,7 @@ function generate() {
  * Update the active nav item on window.scroll
  * @return {void}
  */
-function updateActiveItem() {
+export function updateActiveItem() {
   if (!ticking && !isScrolling) {
     ticking = true;
     window.requestAnimationFrame(checkSectionPosition);
@@ -81,7 +59,7 @@ function updateActiveItem() {
  * Check each section's getBoundingClientRect to determine which is active
  * @return {void}
  */
-function checkSectionPosition() {
+export function checkSectionPosition() {
   let i = sections.length;
 
   // Find i. Start at end and work back
