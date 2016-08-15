@@ -1,4 +1,4 @@
-var stickyNav = (function () {
+var stickynav = (function () {
   'use strict';
 
   /*
@@ -92,12 +92,12 @@ var stickyNav = (function () {
   function scrollPage(to, offset, callback) {
     if ( offset === void 0 ) offset = 0;
 
-    var startTime;
-
     var root = document.body;
     var duration = 500;
+    var startTime;
     var startPos = root.scrollTop;
     var endPos = ~~(to.getBoundingClientRect().top - offset);
+
     var scroll = function (timestamp) {
       var elapsed;
 
@@ -107,7 +107,7 @@ var stickyNav = (function () {
 
       if (elapsed < duration) {
         requestAnimationFrame(scroll);
-      } else if (callback) {
+      } else {
         callback.call(to);
       }
     };
@@ -115,7 +115,8 @@ var stickyNav = (function () {
     requestAnimationFrame(scroll);
   }
 
-  // import * as Scroll from '@apatheticwes/scrollify';
+  // import scrollPage from './scrollPage.js';
+
 
   var handle;
   var sections;
@@ -125,7 +126,7 @@ var stickyNav = (function () {
   var ticking = false;
 
 
-  function stickyNav (options) {
+  function stickynav (options) {
     if ( options === void 0 ) options={};
 
     var offset = options.offset || 0;
@@ -212,6 +213,6 @@ var stickyNav = (function () {
     ticking = false;
   }
 
-  return stickyNav;
+  return stickynav;
 
 }());

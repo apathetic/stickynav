@@ -8,10 +8,9 @@
  */
 
 import Sticky from './sticky.js';
-// import * as Menu from './activeMenu.js';
-
 import scrollPage from '../node_modules/@apatheticwes/scrollify/src/scrollPage';
-// import * as Scroll from '@apatheticwes/scrollify';
+// import scrollPage from './scrollPage.js';
+
 
 let handle;
 let sections;
