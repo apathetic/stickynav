@@ -3,7 +3,7 @@ import resolve from 'rollup-plugin-node-resolve';
 
 export default {
   entry: 'src/stickynav.js',
-  moduleName: 'stickynav',    // for the iife bundle
+  moduleName: 'stickyNav',    // for the iife bundle
   plugins: [
     resolve({                 // this allows us to pull in other modules as ES6 bundles (ie. scrollify stuffs)
       jsnext: true,
