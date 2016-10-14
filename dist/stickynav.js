@@ -92,22 +92,21 @@ var stickyNav = (function () {
   function scrollPage(to, offset, callback) {
     if ( offset === void 0 ) offset = 0;
 
-    var root = document.body;
-    var duration = 500;
     var startTime;
-    var startPos = root.scrollTop;
+    var duration = 500;
+    var startPos = window.pageYOffset;
     var endPos = ~~(to.getBoundingClientRect().top - offset);
-
     var scroll = function (timestamp) {
       var elapsed;
 
       startTime = startTime || timestamp;
       elapsed = timestamp - startTime;
-      root.scrollTop = easeInOutCubic(elapsed, startPos, endPos, duration);
+
+      document.body.scrollTop = document.documentElement.scrollTop = easeInOutCubic(elapsed, startPos, endPos, duration);
 
       if (elapsed < duration) {
         requestAnimationFrame(scroll);
-      } else {
+      } else if (callback) {
         callback.call(to);
       }
     };
@@ -115,7 +114,7 @@ var stickyNav = (function () {
     requestAnimationFrame(scroll);
   }
 
-  // import scrollPage from './scrollPage.js';
+  // import scrollPage from '../node_modules/@apatheticwes/scrollify/src/scrollPage';
 
 
   var handle;

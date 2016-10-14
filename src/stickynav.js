@@ -8,8 +8,8 @@
  */
 
 import Sticky from './sticky.js';
-import scrollPage from '../node_modules/@apatheticwes/scrollify/src/scrollPage';
-// import scrollPage from './scrollPage.js';
+import scrollPage from './scrollPage.js';
+// import scrollPage from '../node_modules/@apatheticwes/scrollify/src/scrollPage';
 
 
 let handle;
