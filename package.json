@@ -2,7 +2,7 @@
   "name": "@hugeinc/stickynav",
   "author": "wes hatch",
   "license": "MIT",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A simple navigation bar that efficiently attaches / detaches to the top of the viewport upon scrolling",
   "jsnext:main": "./dist/stickynav.es6.js",
   "main": "./dist/stickynav.cjs.js",
