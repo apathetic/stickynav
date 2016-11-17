@@ -217,8 +217,8 @@
     ticking = false;
   }
 
-  exports.Nav = stickynav;
+  exports.StickyNav = stickynav;
   exports.Sticky = Sticky;
   exports.Scroll = scrollPage;
 
-}((this.stickynav = this.stickynav || {})));
+}((this.window = this.window || {})));

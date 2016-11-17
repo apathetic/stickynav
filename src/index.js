@@ -3,7 +3,7 @@ import sticky from './sticky';
 import scrollPage from './scrollPage';
 
 export {
-  stickynav as Nav,
+  stickynav as StickyNav,
   sticky as Sticky,
   scrollPage as Scroll
 };

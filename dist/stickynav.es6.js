@@ -214,4 +214,4 @@ function checkSectionPosition() {
   ticking = false;
 }
 
-export { stickynav as Nav, Sticky, scrollPage as Scroll };
+export { stickynav as StickyNav, Sticky, scrollPage as Scroll };

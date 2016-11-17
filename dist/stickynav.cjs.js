@@ -218,6 +218,6 @@ function checkSectionPosition() {
   ticking = false;
 }
 
-exports.Nav = stickynav;
+exports.StickyNav = stickynav;
 exports.Sticky = Sticky;
 exports.Scroll = scrollPage;

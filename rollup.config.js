@@ -4,7 +4,7 @@ import resolve from 'rollup-plugin-node-resolve';
 export default {
   // entry: 'src/stickynav.js',
   entry: 'src/index.js',
-  moduleName: 'stickynav',    // for the iife bundle
+  moduleName: 'window',       // for the iife bundle. Hack: put the exports direclty on the winow for usability
   plugins: [
     resolve({                 // this allows us to pull in other modules as ES6 bundles (ie. scrollify stuffs)
       jsnext: true,
