@@ -2,8 +2,9 @@ import buble from 'rollup-plugin-buble';
 import resolve from 'rollup-plugin-node-resolve';
 
 export default {
-  entry: 'src/stickynav.js',
-  moduleName: 'stickyNav',    // for the iife bundle
+  // entry: 'src/stickynav.js',
+  entry: 'src/index.js',
+  moduleName: 'stickynav',    // for the iife bundle
   plugins: [
     resolve({                 // this allows us to pull in other modules as ES6 bundles (ie. scrollify stuffs)
       jsnext: true,

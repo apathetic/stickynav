@@ -8,22 +8,27 @@
  */
 
 /**
- * Sticky Element: sets up a sticky bar which attaches / detaches to top of viewport
- * @param {HTMLElement} element: The element to sticky-ify
- * @param {Boolean} bounded: Whether to apply stickiness to the bottom of the parent container.
+ * Set up a sticky element that attaches / detaches to top of viewport.
+ * @param {HTMLElement} element         The element to sticky-ify
+ * @param {HTMLElement} boundingElement The bounding element for the sticky element.
+ *                                      Default to the parent, but can be any
+ *                                      element in the page.
  * @return {void}
  */
 export default class Sticky {
 
-  constructor(element, bounded=true) {
+  constructor(element, boundingElement = false) {
     this.element = element instanceof HTMLElement ? element : document.querySelector(element);
     if (!this.element) { return false; }
 
-    this.bounded = !!bounded;
-    this.parent = this.element.parentNode;
-    this.currentState = '_';
     this.stateSwitcher;
+    this.currentState = '_';
     this.determine = 'normal';
+    this.bounded = !!boundingElement;
+    this.parent = this.element.parentNode;
+    // this.parent = !boundingElement ? this.element.parentNode :
+    //               boundingElement instanceof HTMLElement ? boundingElement :
+    //               document.querySelector(boundingElement);
 
     // determine initial state
     if (this.element.getBoundingClientRect().top < 1) {
