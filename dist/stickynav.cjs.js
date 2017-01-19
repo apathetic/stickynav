@@ -11,11 +11,16 @@ Object.defineProperty(exports, '__esModule', { value: true });
  *
  */
 
+// mini querySelector helper fn
+function $(el) {
+  return el instanceof HTMLElement ? el : document.querySelector(el);
+}
+
 /**
  * Set up a sticky element that attaches / detaches to top of viewport.
  * @param {HTMLElement} element         The element to sticky-ify
  * @param {HTMLElement} boundingElement The bounding element for the sticky element.
- *                                      Default to the parent, but can be any
+ *                                      Defaults to the parent, but can be any
  *                                      element in the page.
  * @return {void}
  */
@@ -23,17 +28,14 @@ var Sticky = function Sticky(element, boundingElement) {
   var this$1 = this;
   if ( boundingElement === void 0 ) boundingElement = false;
 
-  this.element = element instanceof HTMLElement ? element : document.querySelector(element);
+  this.element = $(element);
   if (!this.element) { return false; }
 
   this.stateSwitcher;
   this.currentState = '_';
   this.determine = 'normal';
   this.bounded = !!boundingElement;
-  this.parent = this.element.parentNode;
-  // this.parent = !boundingElement ? this.element.parentNode :
-  //             boundingElement instanceof HTMLElement ? boundingElement :
-  //             document.querySelector(boundingElement);
+  this.parent = !boundingElement ? this.element.parentNode : $(boundingElement);
 
   // determine initial state
   if (this.element.getBoundingClientRect().top < 1) {
@@ -43,7 +45,7 @@ var Sticky = function Sticky(element, boundingElement) {
     this.setState('normal');
   }
 
-  // window.addEventListener('scroll', this.stateSwitcher);  // stateSwitcher changes, so cannot pass (ie. bind directly) like this
+  // window.addEventListener('scroll', this.stateSwitcher.bind(this));  // stateSwitcher changes, so cannot pass (ie. bind directly) like this
   window.addEventListener('scroll', function () { this$1.stateSwitcher(); });
   window.addEventListener('resize', function () { this$1.stateSwitcher(); });
 };

@@ -10,7 +10,16 @@
 	SAMPLE NAV SCSS
 ------------------------------------- */
 
+.mini-nav {
+	margin: 0 auto;
+	max-width: 80em;
+	height: 0;				// to prevent menu from affecting layout
+	position: static;
+}
+
 #sticky {
+	display: none;
+	z-index: 10;
 
 	nav {
 		ul {
@@ -19,23 +28,23 @@
 
 		li {
 			list-style:none;
-			float: left;
-			clear: left;
 			width: 172px;
-			margin: 2px 0;
+			margin: 4px 0;
+			text-align: right;
 		}
 
 		a {
 			color: #fff;
+			display: inline-block;
 			text-decoration: none;
 			background: #232326;
 			padding: 2px 12px;
-			float: right;
 			font-size: 14px;
 		}
 
 		.active a {
 			background: #ec008c;
+
 			&:after {
 				content: '';
 				position: absolute;
@@ -43,29 +52,22 @@
 				right: -8px;
 			}
 		}
+	}
 
-		&.sticky {
-			position: fixed;
-		}
+	&.sticky {
+		position: fixed;
+    top: 0;
+    left: 0;
+	}
+
+	&.bottom {
+    position: absolute;;
+    bottom: 0;
 	}
 
 	@media (min-width: 768px) {
-
-		height: 0;				// to prevent menu from affecting layout
-		width: 100%;
-		position:relative;
-		z-index: 1;
-
-		nav {
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 0;
-			z-index: 100;
-			-webkit-backface-visibility: hidden;
+		#sticky {
+			display: inline-block;
 		}
-
 	}
-
 }

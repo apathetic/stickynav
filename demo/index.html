@@ -15,11 +15,13 @@
 	<script src="prism.js"></script>
 	<script>
 		window.addEventListener('DOMContentLoaded', function() {
-			new StickyNav({ nav: '#sticky' });
+			new StickyNav({
+				nav: '#sticky',
+				boundedBy: 'main'
+			});
 		});
 	</script>
 	<!-- end demo stuffs -->
-
 
 </head>
 
@@ -31,13 +33,11 @@
 
 	<main class="component left-rail">
 
-		<nav>
+		<nav class="mini-nav">
 			<div id="sticky">
-				<div class="container">
-					<nav data-autogenerate="true">
-						<ul></ul>
-					</nav>
-				</div>
+				<nav data-autogenerate="true">
+					<ul></ul>
+				</nav>
 			</div>
 		</nav>
 
@@ -188,6 +188,12 @@
 		</section>
 
 	</main>
+
+	<footer>
+		<div class="container">
+			<p>Here we have a large, useless footer. Useless in itself, but useful in that it may be used to highlight
+				 the bounding functionality of the sticknav.</p>
+	</footer>
 
 </body>
 </html>
