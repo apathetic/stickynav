@@ -9,7 +9,6 @@
 
 import Sticky from './sticky.js';
 import scrollPage from './scrollPage.js';
-// import scrollPage from '../node_modules/@apatheticwes/scrollify/src/scrollPage';
 
 
 let handle;
@@ -22,12 +21,12 @@ let ticking = false;
 
 export default (options={}) => {
   const offset = options.offset || 0;
-  const bounded = options.bounded || false;
+  const bounded = options.boundedBy || false;
 
   handle = document.querySelector(options.nav);
   sections = options.sections || document.querySelectorAll('[data-nav]');
 
-  if ( !sections || !handle ) { console.log('StickyNav: missing nav or nav sections.'); return false; }
+  if (!sections || !handle) { console.log('StickyNav: missing nav or nav sections.'); return false; }
 
   new Sticky(handle, bounded);
 
@@ -37,8 +36,6 @@ export default (options={}) => {
 }
 
 
-
-
 /**
  * Generate the nav <li>'s and setup the Event Listeners
  * @return {void}
@@ -46,7 +43,7 @@ export default (options={}) => {
 function generate() {
   const nav = handle.querySelector('ul');
 
-  Array.from(sections, (section) => {
+  Array.prototype.forEach.call(sections, (section) => {
     const title = section.getAttribute('data-nav');
     const id = section.id || '';
     const item = document.createElement('li');

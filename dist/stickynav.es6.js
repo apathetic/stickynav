@@ -7,11 +7,16 @@
  *
  */
 
+// mini querySelector helper fn
+function $(el) {
+  return el instanceof HTMLElement ? el : document.querySelector(el);
+}
+
 /**
  * Set up a sticky element that attaches / detaches to top of viewport.
  * @param {HTMLElement} element         The element to sticky-ify
  * @param {HTMLElement} boundingElement The bounding element for the sticky element.
- *                                      Default to the parent, but can be any
+ *                                      Defaults to the parent, but can be any
  *                                      element in the page.
  * @return {void}
  */
@@ -19,17 +24,14 @@ var Sticky = function Sticky(element, boundingElement) {
   var this$1 = this;
   if ( boundingElement === void 0 ) boundingElement = false;
 
-  this.element = element instanceof HTMLElement ? element : document.querySelector(element);
+  this.element = $(element);
   if (!this.element) { return false; }
 
   this.stateSwitcher;
   this.currentState = '_';
   this.determine = 'normal';
   this.bounded = !!boundingElement;
-  this.parent = this.element.parentNode;
-  // this.parent = !boundingElement ? this.element.parentNode :
-  //             boundingElement instanceof HTMLElement ? boundingElement :
-  //             document.querySelector(boundingElement);
+  this.parent = !boundingElement ? this.element.parentNode : $(boundingElement);
 
   // determine initial state
   if (this.element.getBoundingClientRect().top < 1) {
@@ -39,7 +41,7 @@ var Sticky = function Sticky(element, boundingElement) {
     this.setState('normal');
   }
 
-  // window.addEventListener('scroll', this.stateSwitcher);  // stateSwitcher changes, so cannot pass (ie. bind directly) like this
+  // window.addEventListener('scroll', this.stateSwitcher.bind(this));  // stateSwitcher changes, so cannot pass (ie. bind directly) like this
   window.addEventListener('scroll', function () { this$1.stateSwitcher(); });
   window.addEventListener('resize', function () { this$1.stateSwitcher(); });
 };
@@ -56,6 +58,7 @@ Sticky.prototype.sticky = function sticky () {
   if (parentPosition.top > 1) {
     return this.setState('normal');
   }
+
   if (this.bounded) {
     var elementPosition = this.element.getBoundingClientRect();
     if (parentPosition.bottom < elementPosition.bottom) {
@@ -116,9 +119,6 @@ function scrollPage(to, offset, callback) {
   requestAnimationFrame(scroll);
 }
 
-// import scrollPage from '../node_modules/@apatheticwes/scrollify/src/scrollPage';
-
-
 var handle;
 var sections;
 var items = [];
@@ -131,12 +131,12 @@ function stickynav (options) {
   if ( options === void 0 ) options={};
 
   var offset = options.offset || 0;
-  var bounded = options.bounded || false;
+  var bounded = options.boundedBy || false;
 
   handle = document.querySelector(options.nav);
   sections = options.sections || document.querySelectorAll('[data-nav]');
 
-  if ( !sections || !handle ) { console.log('StickyNav: missing nav or nav sections.'); return false; }
+  if (!sections || !handle) { console.log('StickyNav: missing nav or nav sections.'); return false; }
 
   new Sticky(handle, bounded);
 
@@ -146,8 +146,6 @@ function stickynav (options) {
 }
 
 
-
-
 /**
  * Generate the nav <li>'s and setup the Event Listeners
  * @return {void}
@@ -155,7 +153,7 @@ function stickynav (options) {
 function generate() {
   var nav = handle.querySelector('ul');
 
-  Array.from(sections, function (section) {
+  Array.prototype.forEach.call(sections, function (section) {
     var title = section.getAttribute('data-nav');
     var id = section.id || '';
     var item = document.createElement('li');

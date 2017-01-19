@@ -62,6 +62,7 @@ Sticky.prototype.sticky = function sticky () {
   if (parentPosition.top > 1) {
     return this.setState('normal');
   }
+
   if (this.bounded) {
     var elementPosition = this.element.getBoundingClientRect();
     if (parentPosition.bottom < elementPosition.bottom) {
@@ -122,9 +123,6 @@ function scrollPage(to, offset, callback) {
   requestAnimationFrame(scroll);
 }
 
-// import scrollPage from '../node_modules/@apatheticwes/scrollify/src/scrollPage';
-
-
 var handle;
 var sections;
 var items = [];
@@ -137,12 +135,12 @@ function stickynav (options) {
   if ( options === void 0 ) options={};
 
   var offset = options.offset || 0;
-  var bounded = options.bounded || false;
+  var bounded = options.boundedBy || false;
 
   handle = document.querySelector(options.nav);
   sections = options.sections || document.querySelectorAll('[data-nav]');
 
-  if ( !sections || !handle ) { console.log('StickyNav: missing nav or nav sections.'); return false; }
+  if (!sections || !handle) { console.log('StickyNav: missing nav or nav sections.'); return false; }
 
   new Sticky(handle, bounded);
 
@@ -152,8 +150,6 @@ function stickynav (options) {
 }
 
 
-
-
 /**
  * Generate the nav <li>'s and setup the Event Listeners
  * @return {void}
@@ -161,7 +157,7 @@ function stickynav (options) {
 function generate() {
   var nav = handle.querySelector('ul');
 
-  Array.from(sections, function (section) {
+  Array.prototype.forEach.call(sections, function (section) {
     var title = section.getAttribute('data-nav');
     var id = section.id || '';
     var item = document.createElement('li');
