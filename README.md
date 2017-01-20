@@ -37,7 +37,8 @@ require(['stickyElement', 'stickyNav'], function(stickyElement, stickyNav){
 <script src="path/to/stickyNav.js"></script>
 <script>
 	new stickyNav({
-		nav: '#sticky'
+		nav: '#sticky',
+		boundedBy: 'main'
 	});
 </script>
 ```
@@ -61,6 +62,9 @@ Please see the _test / demo_ directory
 
 ## Release History
 
+### 0.3
+* Breaking change: updating ```bounded``` to ```boundedBy```
+* Better treatment of bounding element
 
 ### 0.1
 * initial commit
