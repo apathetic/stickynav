@@ -160,7 +160,6 @@ function generate() {
 
     item.innerHTML = '<a href="#'+id+'">'+ title + '</a>';
     item.addEventListener('click', function (e) {
-      e.preventDefault();
       items.forEach(function (i) { i.className = ''; });
       item.classList.add('active');
 
@@ -203,8 +202,11 @@ function checkSectionPosition() {
   // Add active class to currentSection, or remove if nothing is currently active
   if (i !== currentSection) {
     items.forEach(function (item) { item.classList.remove('active'); });
+    sections.forEach(function (section) { section.classList.remove('active'); });
+
     if (i >= 0) {
       items[i].classList.add('active');
+      sections[i].classList.add('active');
     }
     currentSection = i;
   }
