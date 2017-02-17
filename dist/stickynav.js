@@ -43,7 +43,7 @@
     this.parent = !this.bounded ? this.element.parentNode : $(this.opts.boundedBy);
 
     // determine initial state
-    if (this.element.getBoundingClientRect().top < 1) {
+    if (this.element.getBoundingClientRect().top < this.opts.offset) {
       this.setState('sticky');
       this.stateSwitcher();
     } else {
