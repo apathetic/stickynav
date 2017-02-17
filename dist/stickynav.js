@@ -15,26 +15,32 @@
     return el instanceof HTMLElement ? el : document.querySelector(el);
   }
 
+  // Sticky element default options
+  var defaults = {
+    offset: 0,
+    boundedBy: false //  Defaults to the parent, but can be any element in the page.
+  }
+
   /**
    * Set up a sticky element that attaches / detaches to top of viewport.
-   * @param {HTMLElement} element         The element to sticky-ify
-   * @param {HTMLElement} boundingElement The bounding element for the sticky element.
-   *                                      Defaults to the parent, but can be any
-   *                                      element in the page.
+   * @param {HTMLElement} element  The element to sticky-ify
+   * @param {Mixed} options        The bounding element for the sticky element,
+   *                               the offset at which to activate
    * @return {void}
    */
-  var Sticky = function Sticky(element, boundingElement) {
+  var Sticky = function Sticky(element, options) {
     var this$1 = this;
-    if ( boundingElement === void 0 ) boundingElement = false;
 
     this.element = $(element);
     if (!this.element) { return false; }
 
+    this.opts = Object.assign(defaults, options);
+
     this.stateSwitcher;
     this.currentState = '_';
     this.determine = 'normal';
-    this.bounded = !!boundingElement;
-    this.parent = !boundingElement ? this.element.parentNode : $(boundingElement);
+    this.bounded = !!this.opts.boundedBy;
+    this.parent = !this.bounded ? this.element.parentNode : $(this.opts.boundedBy);
 
     // determine initial state
     if (this.element.getBoundingClientRect().top < 1) {
@@ -51,14 +57,14 @@
 
   Sticky.prototype.normal = function normal () {
     var elementPosition = this.element.getBoundingClientRect();
-    if (elementPosition.top < 1) {
+    if (elementPosition.top < this.opts.offset) {
       return this.setState('sticky');
     }
   };
 
   Sticky.prototype.sticky = function sticky () {
     var parentPosition = this.parent.getBoundingClientRect();
-    if (parentPosition.top > 1) {
+    if (parentPosition.top > this.opts.offset) {
       return this.setState('normal');
     }
 
@@ -72,7 +78,7 @@
 
   Sticky.prototype.bottom = function bottom () {
     var elementPosition = this.element.getBoundingClientRect();
-    if (elementPosition.top > 1) {
+    if (elementPosition.top > this.opts.offset) {
       return this.setState('sticky');
     }
   };
@@ -141,7 +147,10 @@
 
     if (!sections || !handle) { console.log('StickyNav: missing nav or nav sections.'); return false; }
 
-    new Sticky(handle, bounded);
+    new Sticky(handle, {
+      boundedBy: bounded,
+      offset: offset
+    });
 
     generate();
     checkSectionPosition();

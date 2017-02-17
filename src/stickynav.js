@@ -28,7 +28,10 @@ export default (options={}) => {
 
   if (!sections || !handle) { console.log('StickyNav: missing nav or nav sections.'); return false; }
 
-  new Sticky(handle, bounded);
+  new Sticky(handle, {
+    boundedBy: bounded,
+    offset: offset
+  });
 
   generate();
   checkSectionPosition();

@@ -12,25 +12,32 @@ function $(el) {
   return el instanceof HTMLElement ? el : document.querySelector(el);
 }
 
+// Sticky element default options
+const defaults = {
+  offset: 0,
+  boundedBy: false //  Defaults to the parent, but can be any element in the page.
+}
+
 /**
  * Set up a sticky element that attaches / detaches to top of viewport.
- * @param {HTMLElement} element         The element to sticky-ify
- * @param {HTMLElement} boundingElement The bounding element for the sticky element.
- *                                      Defaults to the parent, but can be any
- *                                      element in the page.
+ * @param {HTMLElement} element  The element to sticky-ify
+ * @param {Mixed} options        The bounding element for the sticky element,
+ *                               the offset at which to activate
  * @return {void}
  */
 export default class Sticky {
 
-  constructor(element, boundingElement = false) {
+  constructor(element, options) {
     this.element = $(element);
     if (!this.element) { return false; }
+
+    this.opts = Object.assign(defaults, options);
 
     this.stateSwitcher;
     this.currentState = '_';
     this.determine = 'normal';
-    this.bounded = !!boundingElement;
-    this.parent = !boundingElement ? this.element.parentNode : $(boundingElement);
+    this.bounded = !!this.opts.boundedBy;
+    this.parent = !this.bounded ? this.element.parentNode : $(this.opts.boundedBy);
 
     // determine initial state
     if (this.element.getBoundingClientRect().top < 1) {
@@ -47,14 +54,14 @@ export default class Sticky {
 
   normal() {
     const elementPosition = this.element.getBoundingClientRect();
-    if (elementPosition.top < 1) {
+    if (elementPosition.top < this.opts.offset) {
       return this.setState('sticky');
     }
   }
 
   sticky() {
     const parentPosition = this.parent.getBoundingClientRect();
-    if (parentPosition.top > 1) {
+    if (parentPosition.top > this.opts.offset) {
       return this.setState('normal');
     }
 
@@ -68,7 +75,7 @@ export default class Sticky {
 
   bottom() {
     const elementPosition = this.element.getBoundingClientRect();
-    if (elementPosition.top > 1) {
+    if (elementPosition.top > this.opts.offset) {
       return this.setState('sticky');
     }
   }

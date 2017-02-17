@@ -3,6 +3,15 @@ section img { float:left; padding-right:10px; width:25%; min-width:200px; }
 .filler, .filler h2 { color:#aaa; }
 .filler img { -webkit-filter: greyscale(100%); opacity:0.5; }
 
+.mini-nav {
+  position: static;
+}
+
+.bottom {
+  position: absolute;
+  bottom: 0;
+}
+
 footer {
   height: 500px;
   background: black;
