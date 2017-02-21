@@ -17,12 +17,12 @@ let items = [];
 let isScrolling = false;
 let currentSection = null;
 let ticking = false;
-
+let offset = 0;
 
 export default (options={}) => {
-  const offset = options.offset || 0;
   const bounded = options.boundedBy || false;
 
+  offset = options.offset || 0;
   handle = document.querySelector(options.nav);
   sections = options.sections || document.querySelectorAll('[data-nav]');
 
@@ -87,7 +87,7 @@ function checkSectionPosition() {
 
   // Find i. Start at end and work back
   for (i; i--;) {
-    if (~~sections[i].getBoundingClientRect().top <= 0) {    // note: ~~ is Math.floor
+    if (~~sections[i].getBoundingClientRect().top <= offset) {  // note: ~~ is Math.floor
       break;
     }
   }

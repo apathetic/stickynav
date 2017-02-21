@@ -135,14 +135,14 @@ var items = [];
 var isScrolling = false;
 var currentSection = null;
 var ticking = false;
-
+var offset = 0;
 
 function stickynav (options) {
   if ( options === void 0 ) options={};
 
-  var offset = options.offset || 0;
   var bounded = options.boundedBy || false;
 
+  offset = options.offset || 0;
   handle = document.querySelector(options.nav);
   sections = options.sections || document.querySelectorAll('[data-nav]');
 
@@ -207,7 +207,8 @@ function checkSectionPosition() {
 
   // Find i. Start at end and work back
   for (i; i--;) {
-    if (~~sections[i].getBoundingClientRect().top <= 0) {    // note: ~~ is Math.floor
+    // if (~~sections[i].getBoundingClientRect().top <= 0) {    // note: ~~ is Math.floor
+    if (~~sections[i].getBoundingClientRect().top <= offset) {  // note: ~~ is Math.floor
       break;
     }
   }
