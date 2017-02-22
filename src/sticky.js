@@ -37,7 +37,7 @@ export default class Sticky {
     this.currentState = '_';
     this.determine = 'normal';
     this.bounded = !!this.opts.boundedBy;
-    this.parent = !this.bounded ? this.element.parentNode : $(this.opts.boundedBy);
+    this.parent = (typeof this.opts.boundedBy === 'boolean') ? this.element.parentNode : $(this.opts.boundedBy);
 
     // determine initial state
     if (this.element.getBoundingClientRect().top < this.opts.offset) {
