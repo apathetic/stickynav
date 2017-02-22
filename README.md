@@ -62,6 +62,13 @@ Please see the _test / demo_ directory
 
 ## Release History
 
+### 0.5
+* Complete rewrite of StickyNav into an ES6 class
+* updating docs to better reflect options
+
+### 0.4
+* adding offset to allow stickiness that is not necessarily at the top of the viewport
+
 ### 0.3
 * Breaking change: updating ```bounded``` to ```boundedBy```
 * Better treatment of bounding element

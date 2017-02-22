@@ -11,98 +11,94 @@ import Sticky from './sticky.js';
 import scrollPage from './scrollPage.js';
 
 
-let handle;
-let sections;
-let items = [];
-let isScrolling = false;
-let currentSection = null;
-let ticking = false;
-let offset = 0;
+export default class Stickynav {
 
-export default (options={}) => {
-  const bounded = options.boundedBy || false;
+  constructor(options={}) {
+    this.handle = document.querySelector(options.nav);
+    this.sections = options.sections || document.querySelectorAll('[data-nav]');
 
-  offset = options.offset || 0;
-  handle = document.querySelector(options.nav);
-  sections = options.sections || document.querySelectorAll('[data-nav]');
+    if (!this.sections || !this.handle) { console.log('StickyNav: missing nav or nav sections.'); return false; }
 
-  if (!sections || !handle) { console.log('StickyNav: missing nav or nav sections.'); return false; }
+    this.items = [];
+    this.isScrolling = false;
+    this.currentSection = null;
+    this.ticking = false;
+    this.offset = options.offset || 0;
 
-  new Sticky(handle, {
-    boundedBy: bounded,
-    offset: offset
-  });
-
-  generate();
-  checkSectionPosition();
-  window.addEventListener('scroll', updateActiveItem);
-}
-
-
-/**
- * Generate the nav <li>'s and setup the Event Listeners
- * @return {void}
- */
-function generate() {
-  const nav = handle.querySelector('ul');
-
-  Array.prototype.forEach.call(sections, (section) => {
-    const title = section.getAttribute('data-nav');
-    const id = section.id || '';
-    const item = document.createElement('li');
-
-    item.innerHTML = '<a href="#'+id+'">'+ title + '</a>';
-    item.addEventListener('click', (e) => {
-      items.forEach((i) => { i.className = ''; });
-      item.classList.add('active');
-
-      isScrolling = true;
-      scrollPage(section, 0, () => { isScrolling = false });
+    new Sticky(this.handle, {
+      boundedBy: options.boundedBy || false,
+      offset: this.offset
     });
 
-    items.push(item);
-    nav.appendChild(item);
-  });
-}
+    this.generate();
+    this.checkSectionPosition();
 
-
-/**
- * Update the active nav item on window.scroll
- * @return {void}
- */
-function updateActiveItem() {
-  if (!ticking && !isScrolling) {
-    ticking = true;
-    window.requestAnimationFrame(checkSectionPosition);
+    window.addEventListener('scroll', this.updateActiveItem.bind(this));
   }
-}
 
+  /**
+   * Generate the nav <li>'s and setup the Event Listeners
+   * @return {void}
+   */
+  generate() {
+    const nav = this.handle.querySelector('ul');
 
-/**
- * Check each section's getBoundingClientRect to determine which is active
- * @return {void}
- */
-function checkSectionPosition() {
-  let i = sections.length;
+    Array.prototype.forEach.call(this.sections, (section) => {
+      const title = section.getAttribute('data-nav');
+      const id = section.id || '';
+      const item = document.createElement('li');
 
-  // Find i. Start at end and work back
-  for (i; i--;) {
-    if (~~sections[i].getBoundingClientRect().top <= offset) {  // note: ~~ is Math.floor
-      break;
+      item.innerHTML = '<a href="#'+id+'">'+ title + '</a>';
+      item.addEventListener('click', (e) => {
+        this.items.forEach((i) => { i.className = ''; });
+        item.classList.add('active');
+        this.isScrolling = true;
+        scrollPage(section, 0, () => { this.isScrolling = false });
+      });
+
+      this.items.push(item);
+      nav.appendChild(item);
+    });
+  }
+
+  /**
+   * Update the active nav item on window.scroll. This decouples it from scroll events
+   * @return {void}
+   */
+  updateActiveItem() {
+    if (!this.ticking && !this.isScrolling) {
+      this.ticking = true;
+      window.requestAnimationFrame(this.checkSectionPosition.bind(this));
     }
   }
 
-  // Add active class to currentSection, or remove if nothing is currently active
-  if (i !== currentSection) {
-    items.forEach((item) => { item.classList.remove('active'); });
-    sections.forEach(function (section) { section.classList.remove('active'); });
+  /**
+   * Check each section's getBoundingClientRect to determine which is active
+   * @return {void}
+   */
+  checkSectionPosition() {
+    let i = this.sections.length;
 
-    if (i >= 0) {
-      items[i].classList.add('active');
-      sections[i].classList.add('active');
+    // Find i. Start at end and work back
+    for (i; i--;) {
+      if (~~this.sections[i].getBoundingClientRect().top <= this.offset) {  // note: ~~ is Math.floor
+        break;
+      }
     }
-    currentSection = i;
-  }
 
-  ticking = false;
+    // Add active class to currentSection, or remove if nothing is currently active
+    if (i !== this.currentSection) {
+      this.items.forEach((item) => { item.classList.remove('active'); });
+      this.sections.forEach((section) => { section.classList.remove('active'); });
+
+      if (i >= 0) {
+        this.items[i].classList.add('active');
+        this.sections[i].classList.add('active');
+      }
+
+      this.currentSection = i;
+    }
+
+    this.ticking = false;
+  }
 }

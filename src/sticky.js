@@ -31,7 +31,7 @@ export default class Sticky {
     this.element = $(element);
     if (!this.element) { return false; }
 
-    this.opts = Object.assign(defaults, options);
+    this.opts = Object.assign({}, defaults, options);
 
     this.stateSwitcher;
     this.currentState = '_';

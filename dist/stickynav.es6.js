@@ -31,7 +31,7 @@ var Sticky = function Sticky(element, options) {
   this.element = $(element);
   if (!this.element) { return false; }
 
-  this.opts = Object.assign(defaults, options);
+  this.opts = Object.assign({}, defaults, options);
 
   this.stateSwitcher;
   this.currentState = '_';
@@ -125,103 +125,99 @@ function scrollPage(to, offset, callback) {
   requestAnimationFrame(scroll);
 }
 
-var handle;
-var sections;
-var items = [];
-var isScrolling = false;
-var currentSection = null;
-var ticking = false;
-var offset = 0;
-
-function stickynav (options) {
+var Stickynav = function Stickynav(options) {
   if ( options === void 0 ) options={};
 
-  var bounded = options.boundedBy || false;
+  this.handle = document.querySelector(options.nav);
+  this.sections = options.sections || document.querySelectorAll('[data-nav]');
 
-  offset = options.offset || 0;
-  handle = document.querySelector(options.nav);
-  sections = options.sections || document.querySelectorAll('[data-nav]');
+  if (!this.sections || !this.handle) { console.log('StickyNav: missing nav or nav sections.'); return false; }
 
-  if (!sections || !handle) { console.log('StickyNav: missing nav or nav sections.'); return false; }
+  this.items = [];
+  this.isScrolling = false;
+  this.currentSection = null;
+  this.ticking = false;
+  this.offset = options.offset || 0;
 
-  new Sticky(handle, {
-    boundedBy: bounded,
-    offset: offset
+  new Sticky(this.handle, {
+    boundedBy: options.boundedBy || false,
+    offset: this.offset
   });
 
-  generate();
-  checkSectionPosition();
-  window.addEventListener('scroll', updateActiveItem);
-}
+  this.generate();
+  this.checkSectionPosition();
 
+  window.addEventListener('scroll', this.updateActiveItem.bind(this));
+};
 
 /**
  * Generate the nav <li>'s and setup the Event Listeners
  * @return {void}
  */
-function generate() {
-  var nav = handle.querySelector('ul');
+Stickynav.prototype.generate = function generate () {
+    var this$1 = this;
 
-  Array.prototype.forEach.call(sections, function (section) {
+  var nav = this.handle.querySelector('ul');
+
+  Array.prototype.forEach.call(this.sections, function (section) {
     var title = section.getAttribute('data-nav');
     var id = section.id || '';
     var item = document.createElement('li');
 
     item.innerHTML = '<a href="#'+id+'">'+ title + '</a>';
     item.addEventListener('click', function (e) {
-      items.forEach(function (i) { i.className = ''; });
+      this$1.items.forEach(function (i) { i.className = ''; });
       item.classList.add('active');
-
-      isScrolling = true;
-      scrollPage(section, 0, function () { isScrolling = false });
+      this$1.isScrolling = true;
+      scrollPage(section, 0, function () { this$1.isScrolling = false });
     });
 
-    items.push(item);
+    this$1.items.push(item);
     nav.appendChild(item);
   });
-}
-
+};
 
 /**
- * Update the active nav item on window.scroll
+ * Update the active nav item on window.scroll. This decouples it from scroll events
  * @return {void}
  */
-function updateActiveItem() {
-  if (!ticking && !isScrolling) {
-    ticking = true;
-    window.requestAnimationFrame(checkSectionPosition);
+Stickynav.prototype.updateActiveItem = function updateActiveItem () {
+  if (!this.ticking && !this.isScrolling) {
+    this.ticking = true;
+    window.requestAnimationFrame(this.checkSectionPosition.bind(this));
   }
-}
-
+};
 
 /**
  * Check each section's getBoundingClientRect to determine which is active
  * @return {void}
  */
-function checkSectionPosition() {
-  var i = sections.length;
+Stickynav.prototype.checkSectionPosition = function checkSectionPosition () {
+    var this$1 = this;
+
+  var i = this.sections.length;
 
   // Find i. Start at end and work back
   for (i; i--;) {
-    // if (~~sections[i].getBoundingClientRect().top <= 0) {    // note: ~~ is Math.floor
-    if (~~sections[i].getBoundingClientRect().top <= offset) {  // note: ~~ is Math.floor
+    if (~~this$1.sections[i].getBoundingClientRect().top <= this$1.offset) {// note: ~~ is Math.floor
       break;
     }
   }
 
   // Add active class to currentSection, or remove if nothing is currently active
-  if (i !== currentSection) {
-    items.forEach(function (item) { item.classList.remove('active'); });
-    sections.forEach(function (section) { section.classList.remove('active'); });
+  if (i !== this.currentSection) {
+    this.items.forEach(function (item) { item.classList.remove('active'); });
+    this.sections.forEach(function (section) { section.classList.remove('active'); });
 
     if (i >= 0) {
-      items[i].classList.add('active');
-      sections[i].classList.add('active');
+      this.items[i].classList.add('active');
+      this.sections[i].classList.add('active');
     }
-    currentSection = i;
+
+    this.currentSection = i;
   }
 
-  ticking = false;
-}
+  this.ticking = false;
+};
 
-export { stickynav as StickyNav, Sticky, scrollPage as Scroll };
+export { Stickynav as StickyNav, Sticky, scrollPage as Scroll };
