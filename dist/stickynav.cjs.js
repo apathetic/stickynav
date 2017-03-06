@@ -129,11 +129,18 @@ function scrollPage(to, offset, callback) {
   requestAnimationFrame(scroll);
 }
 
+// mini querySelectorAll helper fn
+function $$(els) {
+  return els instanceof NodeList ? Array.prototype.slice.call(els) :
+         typeof els === 'string' ? Array.prototype.slice.call(document.querySelectorAll(els)) :
+         [];
+}
+
 var Stickynav = function Stickynav(options) {
   if ( options === void 0 ) options={};
 
   this.handle = document.querySelector(options.nav);
-  this.sections = options.sections || document.querySelectorAll('[data-nav]');
+  this.sections = $$(options.sections || document.querySelectorAll('[data-nav]'));
 
   if (!this.sections || !this.handle) { console.log('StickyNav: missing nav or nav sections.'); return false; }
 

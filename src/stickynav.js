@@ -10,12 +10,18 @@
 import Sticky from './sticky.js';
 import scrollPage from './scrollPage.js';
 
+// mini querySelectorAll helper fn
+function $$(els) {
+  return els instanceof NodeList ? Array.prototype.slice.call(els) :
+         typeof els === 'string' ? Array.prototype.slice.call(document.querySelectorAll(els)) :
+         [];
+}
 
 export default class Stickynav {
 
   constructor(options={}) {
     this.handle = document.querySelector(options.nav);
-    this.sections = options.sections || document.querySelectorAll('[data-nav]');
+    this.sections = $$(options.sections || document.querySelectorAll('[data-nav]'));
 
     if (!this.sections || !this.handle) { console.log('StickyNav: missing nav or nav sections.'); return false; }
 
