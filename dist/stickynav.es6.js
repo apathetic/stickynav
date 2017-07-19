@@ -18,6 +18,12 @@ var defaults = {
   boundedBy: false //  Defaults to the parent, but can be any element in the page.
 }
 
+// Sticky Event
+var stickyEvent = new Event('sticky', {
+  bubbles: true
+});
+
+
 /**
  * Set up a sticky element that attaches / detaches to top of viewport.
  * @param {HTMLElement} element  The element to sticky-ify
@@ -84,6 +90,7 @@ Sticky.prototype.setState = function setState (state) {
   if (this.currentState === state) { return; }
   this.element.classList.remove(this.currentState);
   this.element.classList.add(state);
+  this.element.dispatchEvent(stickyEvent); // , { detail: state });
   this.currentState = state;
   this.stateSwitcher = this[state]; // stateSwitcher will point at an internal fn
 };
@@ -92,6 +99,8 @@ function easeInOutCubic(t, b, c, d) {
   if ((t /= d / 2) < 1) { return c / 2 * t * t * t + b; }
   return c / 2 * ((t -= 2) * t * t + 2) + b;
 }
+
+/*global document requestAnimationFrame*/
 
 /**
  * Scroll the page to a particular page anchor
@@ -124,6 +133,15 @@ function scrollPage(to, offset, callback) {
 
   requestAnimationFrame(scroll);
 }
+
+/*
+ * sticky nav
+ * https://github.com/apathetic/stickynav
+ *
+ * Copyright (c) 2013, 2016 Wes Hatch
+ * Licensed under the MIT license.
+ *
+ */
 
 // mini querySelectorAll helper fn
 function $$(els) {
