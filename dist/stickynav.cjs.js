@@ -44,7 +44,7 @@ var Sticky = function Sticky(element, options) {
   this.opts = Object.assign({}, defaults, options);
 
   this.stateSwitcher;
-  this.currentState = '_';
+  this.currentState = null;
   this.determine = 'normal';
   this.bounded = !!this.opts.boundedBy;
   this.parent = (typeof this.opts.boundedBy === 'boolean') ? this.element.parentNode : $(this.opts.boundedBy);
@@ -94,9 +94,12 @@ Sticky.prototype.setState = function setState (state) {
   if (this.currentState === state) { return; }
   this.element.classList.remove(this.currentState);
   this.element.classList.add(state);
-  this.element.dispatchEvent(stickyEvent); // , { detail: state });
   this.currentState = state;
   this.stateSwitcher = this[state]; // stateSwitcher will point at an internal fn
+
+  if (state === 'sticky') {
+    this.element.dispatchEvent(stickyEvent); // , { detail: state });
+  }
 };
 
 function easeInOutCubic(t, b, c, d) {
