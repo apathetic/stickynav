@@ -19,7 +19,7 @@ var defaults = {
 }
 
 // Sticky Event
-var stickyEvent = new Event('sticky', {
+var stickyEvent = new CustomEvent('sticky', {
   bubbles: true
 });
 

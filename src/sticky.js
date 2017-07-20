@@ -19,7 +19,7 @@ const defaults = {
 }
 
 // Sticky Event
-const stickyEvent = new Event('sticky', {
+const stickyEvent = new CustomEvent('sticky', {
   bubbles: true
 });
 
