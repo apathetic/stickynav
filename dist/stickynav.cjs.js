@@ -201,7 +201,7 @@ Stickynav.prototype.generate = function generate () {
       this$1.items.forEach(function (i) { i.className = ''; });
       item.classList.add('active');
       this$1.isScrolling = true;
-      scrollPage(section, 0, function () { this$1.isScrolling = false });
+      scrollPage(section, this$1.offset, function () { this$1.isScrolling = false });
     });
 
     this$1.items.push(item);
