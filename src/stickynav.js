@@ -59,7 +59,7 @@ export default class Stickynav {
         this.items.forEach((i) => { i.className = ''; });
         item.classList.add('active');
         this.isScrolling = true;
-        scrollPage(section, 0, () => { this.isScrolling = false });
+        scrollPage(section, this.offset, () => { this.isScrolling = false });
       });
 
       this.items.push(item);
