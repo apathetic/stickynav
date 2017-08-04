@@ -15,6 +15,10 @@
 	<script src="prism.js"></script>
 	<script>
 		window.addEventListener('DOMContentLoaded', function() {
+			document.body.addEventListener('sticky', function(e) {
+				console.log('now sticking: ', e.target.id);
+			});
+
 			new StickyNav({
 				nav: '#sticky',
 				boundedBy: 'main'

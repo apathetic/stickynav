@@ -22,6 +22,12 @@ var defaults = {
   boundedBy: false //  Defaults to the parent, but can be any element in the page.
 }
 
+// Sticky Event
+var stickyEvent = new CustomEvent('sticky', {
+  bubbles: true
+});
+
+
 /**
  * Set up a sticky element that attaches / detaches to top of viewport.
  * @param {HTMLElement} element  The element to sticky-ify
@@ -38,7 +44,7 @@ var Sticky = function Sticky(element, options) {
   this.opts = Object.assign({}, defaults, options);
 
   this.stateSwitcher;
-  this.currentState = '_';
+  this.currentState = null;
   this.determine = 'normal';
   this.bounded = !!this.opts.boundedBy;
   this.parent = (typeof this.opts.boundedBy === 'boolean') ? this.element.parentNode : $(this.opts.boundedBy);
@@ -90,12 +96,18 @@ Sticky.prototype.setState = function setState (state) {
   this.element.classList.add(state);
   this.currentState = state;
   this.stateSwitcher = this[state]; // stateSwitcher will point at an internal fn
+
+  if (state === 'sticky') {
+    this.element.dispatchEvent(stickyEvent); // , { detail: state });
+  }
 };
 
 function easeInOutCubic(t, b, c, d) {
   if ((t /= d / 2) < 1) { return c / 2 * t * t * t + b; }
   return c / 2 * ((t -= 2) * t * t + 2) + b;
 }
+
+/*global document requestAnimationFrame*/
 
 /**
  * Scroll the page to a particular page anchor
@@ -128,6 +140,15 @@ function scrollPage(to, offset, callback) {
 
   requestAnimationFrame(scroll);
 }
+
+/*
+ * sticky nav
+ * https://github.com/apathetic/stickynav
+ *
+ * Copyright (c) 2013, 2016 Wes Hatch
+ * Licensed under the MIT license.
+ *
+ */
 
 // mini querySelectorAll helper fn
 function $$(els) {
@@ -180,7 +201,7 @@ Stickynav.prototype.generate = function generate () {
       this$1.items.forEach(function (i) { i.className = ''; });
       item.classList.add('active');
       this$1.isScrolling = true;
-      scrollPage(section, 0, function () { this$1.isScrolling = false });
+      scrollPage(section, this$1.offset, function () { this$1.isScrolling = false });
     });
 
     this$1.items.push(item);

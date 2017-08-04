@@ -18,6 +18,12 @@ const defaults = {
   boundedBy: false //  Defaults to the parent, but can be any element in the page.
 }
 
+// Sticky Event
+const stickyEvent = new CustomEvent('sticky', {
+  bubbles: true
+});
+
+
 /**
  * Set up a sticky element that attaches / detaches to top of viewport.
  * @param {HTMLElement} element  The element to sticky-ify
@@ -34,7 +40,7 @@ export default class Sticky {
     this.opts = Object.assign({}, defaults, options);
 
     this.stateSwitcher;
-    this.currentState = '_';
+    this.currentState = null;
     this.determine = 'normal';
     this.bounded = !!this.opts.boundedBy;
     this.parent = (typeof this.opts.boundedBy === 'boolean') ? this.element.parentNode : $(this.opts.boundedBy);
@@ -86,5 +92,9 @@ export default class Sticky {
     this.element.classList.add(state);
     this.currentState = state;
     this.stateSwitcher = this[state];   // stateSwitcher will point at an internal fn
+
+    if (state === 'sticky') {
+      this.element.dispatchEvent(stickyEvent); // , { detail: state });
+    }
   }
 }
