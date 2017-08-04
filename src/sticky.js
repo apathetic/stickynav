@@ -7,6 +7,10 @@
  *
  */
 
+import { customEventPolyfill } from './polyfills.js';
+
+customEventPolyfill();
+
 // mini querySelector helper fn
 function $(el) {
   return el instanceof HTMLElement ? el : document.querySelector(el);

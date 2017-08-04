@@ -1,14 +1,22 @@
 (function (exports) {
   'use strict';
 
-  /*
-   * Sticky
-   * https://github.com/apathetic/stickynav/
-   *
-   * Copyright (c) 2012, 2016 Wes Hatch
-   * Licensed under the MIT license.
-   *
-   */
+  // Custom Event prototype
+  function customEventPolyfill() {
+    if (typeof window.CustomEvent === 'function') return false; //If not IE
+
+    function CustomEvent (event, params) {
+      params = params || { bubbles: false, cancelable: false, detail: undefined };
+      var evt = document.createEvent('CustomEvent');
+      evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
+      return evt;
+    }
+
+    CustomEvent.prototype = window.Event.prototype;
+    window.CustomEvent = CustomEvent;
+  }
+
+  customEventPolyfill();
 
   // mini querySelector helper fn
   function $(el) {
@@ -240,21 +248,6 @@
 
     this.ticking = false;
   };
-
-  // Custom Event prototype
-  (function () {
-    if (typeof window.CustomEvent === 'function') return false; //If not IE
-
-    function CustomEvent (event, params) {
-      params = params || { bubbles: false, cancelable: false, detail: undefined };
-      var evt = document.createEvent('CustomEvent');
-      evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
-      return evt;
-    }
-
-    CustomEvent.prototype = window.Event.prototype;
-    window.CustomEvent = CustomEvent;
-  })();
 
   exports.StickyNav = Stickynav;
   exports.Sticky = Sticky;
