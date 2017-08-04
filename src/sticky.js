@@ -7,9 +7,9 @@
  *
  */
 
-import { customEventPolyfill } from './polyfills.js';
+import polyfill from './polyfills.js';
+polyfill();
 
-customEventPolyfill();
 
 // mini querySelector helper fn
 function $(el) {
