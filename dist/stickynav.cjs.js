@@ -107,8 +107,6 @@ function easeInOutCubic(t, b, c, d) {
   return c / 2 * ((t -= 2) * t * t + 2) + b;
 }
 
-/*global document requestAnimationFrame*/
-
 /**
  * Scroll the page to a particular page anchor
  * @param  {String} to: The id of the element to scroll to.
@@ -141,18 +139,10 @@ function scrollPage(to, offset, callback) {
   requestAnimationFrame(scroll);
 }
 
-/*
- * sticky nav
- * https://github.com/apathetic/stickynav
- *
- * Copyright (c) 2013, 2016 Wes Hatch
- * Licensed under the MIT license.
- *
- */
-
 // mini querySelectorAll helper fn
 function $$(els) {
   return els instanceof NodeList ? Array.prototype.slice.call(els) :
+         els instanceof HTMLElement ? [els] :
          typeof els === 'string' ? Array.prototype.slice.call(document.querySelectorAll(els)) :
          [];
 }
@@ -160,7 +150,7 @@ function $$(els) {
 var Stickynav = function Stickynav(options) {
   if ( options === void 0 ) options={};
 
-  this.handle = document.querySelector(options.nav);
+  this.handle = $$(options.nav)[0];
   this.sections = $$(options.sections || document.querySelectorAll('[data-nav]'));
 
   if (!this.sections || !this.handle) { console.log('StickyNav: missing nav or nav sections.'); return false; }
@@ -251,6 +241,21 @@ Stickynav.prototype.checkSectionPosition = function checkSectionPosition () {
 
   this.ticking = false;
 };
+
+// Custom Event prototype
+(function () {
+  if (typeof window.CustomEvent === 'function') return false; //If not IE
+
+  function CustomEvent (event, params) {
+    params = params || { bubbles: false, cancelable: false, detail: undefined };
+    var evt = document.createEvent('CustomEvent');
+    evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
+    return evt;
+  }
+
+  CustomEvent.prototype = window.Event.prototype;
+  window.CustomEvent = CustomEvent;
+})();
 
 exports.StickyNav = Stickynav;
 exports.Sticky = Sticky;

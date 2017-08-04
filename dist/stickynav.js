@@ -1,258 +1,263 @@
 (function (exports) {
-'use strict';
+  'use strict';
 
-/*
- * Sticky
- * https://github.com/apathetic/stickynav/
- *
- * Copyright (c) 2012, 2016 Wes Hatch
- * Licensed under the MIT license.
- *
- */
+  /*
+   * Sticky
+   * https://github.com/apathetic/stickynav/
+   *
+   * Copyright (c) 2012, 2016 Wes Hatch
+   * Licensed under the MIT license.
+   *
+   */
 
-// mini querySelector helper fn
-function $(el) {
-  return el instanceof HTMLElement ? el : document.querySelector(el);
-}
-
-// Sticky element default options
-var defaults = {
-  offset: 0,
-  boundedBy: false //  Defaults to the parent, but can be any element in the page.
-}
-
-// Sticky Event
-var stickyEvent = new CustomEvent('sticky', {
-  bubbles: true
-});
-
-
-/**
- * Set up a sticky element that attaches / detaches to top of viewport.
- * @param {HTMLElement} element  The element to sticky-ify
- * @param {Mixed} options        The bounding element for the sticky element,
- *                               the offset at which to activate
- * @return {void}
- */
-var Sticky = function Sticky(element, options) {
-  var this$1 = this;
-
-  this.element = $(element);
-  if (!this.element) { return false; }
-
-  this.opts = Object.assign({}, defaults, options);
-
-  this.stateSwitcher;
-  this.currentState = null;
-  this.determine = 'normal';
-  this.bounded = !!this.opts.boundedBy;
-  this.parent = (typeof this.opts.boundedBy === 'boolean') ? this.element.parentNode : $(this.opts.boundedBy);
-
-  // determine initial state
-  if (this.element.getBoundingClientRect().top < this.opts.offset) {
-    this.setState('sticky');
-    this.stateSwitcher();
-  } else {
-    this.setState('normal');
+  // mini querySelector helper fn
+  function $(el) {
+    return el instanceof HTMLElement ? el : document.querySelector(el);
   }
 
-  // window.addEventListener('scroll', this.stateSwitcher.bind(this));  // stateSwitcher changes, so cannot pass (ie. bind directly) like this
-  window.addEventListener('scroll', function () { this$1.stateSwitcher(); });
-  window.addEventListener('resize', function () { this$1.stateSwitcher(); });
-};
-
-Sticky.prototype.normal = function normal () {
-  var elementPosition = this.element.getBoundingClientRect();
-  if (elementPosition.top < this.opts.offset) {
-    return this.setState('sticky');
-  }
-};
-
-Sticky.prototype.sticky = function sticky () {
-  var parentPosition = this.parent.getBoundingClientRect();
-  if (parentPosition.top > this.opts.offset) {
-    return this.setState('normal');
+  // Sticky element default options
+  var defaults = {
+    offset: 0,
+    boundedBy: false //  Defaults to the parent, but can be any element in the page.
   }
 
-  if (this.bounded) {
-    var elementPosition = this.element.getBoundingClientRect();
-    if (parentPosition.bottom < elementPosition.bottom) {
-      return this.setState('bottom');
+  // Sticky Event
+  var stickyEvent = new CustomEvent('sticky', {
+    bubbles: true
+  });
+
+
+  /**
+   * Set up a sticky element that attaches / detaches to top of viewport.
+   * @param {HTMLElement} element  The element to sticky-ify
+   * @param {Mixed} options        The bounding element for the sticky element,
+   *                               the offset at which to activate
+   * @return {void}
+   */
+  var Sticky = function Sticky(element, options) {
+    var this$1 = this;
+
+    this.element = $(element);
+    if (!this.element) { return false; }
+
+    this.opts = Object.assign({}, defaults, options);
+
+    this.stateSwitcher;
+    this.currentState = null;
+    this.determine = 'normal';
+    this.bounded = !!this.opts.boundedBy;
+    this.parent = (typeof this.opts.boundedBy === 'boolean') ? this.element.parentNode : $(this.opts.boundedBy);
+
+    // determine initial state
+    if (this.element.getBoundingClientRect().top < this.opts.offset) {
+      this.setState('sticky');
+      this.stateSwitcher();
+    } else {
+      this.setState('normal');
     }
-  }
-};
 
-Sticky.prototype.bottom = function bottom () {
-  var elementPosition = this.element.getBoundingClientRect();
-  if (elementPosition.top > this.opts.offset) {
-    return this.setState('sticky');
-  }
-};
+    // window.addEventListener('scroll', this.stateSwitcher.bind(this));  // stateSwitcher changes, so cannot pass (ie. bind directly) like this
+    window.addEventListener('scroll', function () { this$1.stateSwitcher(); });
+    window.addEventListener('resize', function () { this$1.stateSwitcher(); });
+  };
 
-Sticky.prototype.setState = function setState (state) {
-  if (this.currentState === state) { return; }
-  this.element.classList.remove(this.currentState);
-  this.element.classList.add(state);
-  this.currentState = state;
-  this.stateSwitcher = this[state]; // stateSwitcher will point at an internal fn
-
-  if (state === 'sticky') {
-    this.element.dispatchEvent(stickyEvent); // , { detail: state });
-  }
-};
-
-function easeInOutCubic(t, b, c, d) {
-  if ((t /= d / 2) < 1) { return c / 2 * t * t * t + b; }
-  return c / 2 * ((t -= 2) * t * t + 2) + b;
-}
-
-/*global document requestAnimationFrame*/
-
-/**
- * Scroll the page to a particular page anchor
- * @param  {String} to: The id of the element to scroll to.
- * @param  {Integer} offset: A scrolling offset.
- * @param  {Function} callback: Function to apply after scrolling
- * @return {void}
- */
-function scrollPage(to, offset, callback) {
-  if ( offset === void 0 ) offset = 0;
-
-  var startTime;
-  var duration = 500;
-  var startPos = window.pageYOffset;
-  var endPos = ~~(to.getBoundingClientRect().top - offset);
-  var scroll = function (timestamp) {
-    var elapsed;
-
-    startTime = startTime || timestamp;
-    elapsed = timestamp - startTime;
-
-    document.body.scrollTop = document.documentElement.scrollTop = easeInOutCubic(elapsed, startPos, endPos, duration);
-
-    if (elapsed < duration) {
-      requestAnimationFrame(scroll);
-    } else if (callback) {
-      callback.call(to);
+  Sticky.prototype.normal = function normal () {
+    var elementPosition = this.element.getBoundingClientRect();
+    if (elementPosition.top < this.opts.offset) {
+      return this.setState('sticky');
     }
   };
 
-  requestAnimationFrame(scroll);
-}
+  Sticky.prototype.sticky = function sticky () {
+    var parentPosition = this.parent.getBoundingClientRect();
+    if (parentPosition.top > this.opts.offset) {
+      return this.setState('normal');
+    }
 
-/*
- * sticky nav
- * https://github.com/apathetic/stickynav
- *
- * Copyright (c) 2013, 2016 Wes Hatch
- * Licensed under the MIT license.
- *
- */
+    if (this.bounded) {
+      var elementPosition = this.element.getBoundingClientRect();
+      if (parentPosition.bottom < elementPosition.bottom) {
+        return this.setState('bottom');
+      }
+    }
+  };
 
-// mini querySelectorAll helper fn
-function $$(els) {
-  return els instanceof NodeList ? Array.prototype.slice.call(els) :
-         typeof els === 'string' ? Array.prototype.slice.call(document.querySelectorAll(els)) :
-         [];
-}
+  Sticky.prototype.bottom = function bottom () {
+    var elementPosition = this.element.getBoundingClientRect();
+    if (elementPosition.top > this.opts.offset) {
+      return this.setState('sticky');
+    }
+  };
 
-var Stickynav = function Stickynav(options) {
-  if ( options === void 0 ) options={};
+  Sticky.prototype.setState = function setState (state) {
+    if (this.currentState === state) { return; }
+    this.element.classList.remove(this.currentState);
+    this.element.classList.add(state);
+    this.currentState = state;
+    this.stateSwitcher = this[state]; // stateSwitcher will point at an internal fn
 
-  this.handle = document.querySelector(options.nav);
-  this.sections = $$(options.sections || document.querySelectorAll('[data-nav]'));
+    if (state === 'sticky') {
+      this.element.dispatchEvent(stickyEvent); // , { detail: state });
+    }
+  };
 
-  if (!this.sections || !this.handle) { console.log('StickyNav: missing nav or nav sections.'); return false; }
+  function easeInOutCubic(t, b, c, d) {
+    if ((t /= d / 2) < 1) { return c / 2 * t * t * t + b; }
+    return c / 2 * ((t -= 2) * t * t + 2) + b;
+  }
 
-  this.items = [];
-  this.isScrolling = false;
-  this.currentSection = null;
-  this.ticking = false;
-  this.offset = options.offset || 0;
+  /**
+   * Scroll the page to a particular page anchor
+   * @param  {String} to: The id of the element to scroll to.
+   * @param  {Integer} offset: A scrolling offset.
+   * @param  {Function} callback: Function to apply after scrolling
+   * @return {void}
+   */
+  function scrollPage(to, offset, callback) {
+    if ( offset === void 0 ) offset = 0;
 
-  new Sticky(this.handle, {
-    boundedBy: options.boundedBy || false,
-    offset: this.offset
-  });
+    var startTime;
+    var duration = 500;
+    var startPos = window.pageYOffset;
+    var endPos = ~~(to.getBoundingClientRect().top - offset);
+    var scroll = function (timestamp) {
+      var elapsed;
 
-  this.generate();
-  this.checkSectionPosition();
+      startTime = startTime || timestamp;
+      elapsed = timestamp - startTime;
 
-  window.addEventListener('scroll', this.updateActiveItem.bind(this));
-};
+      document.body.scrollTop = document.documentElement.scrollTop = easeInOutCubic(elapsed, startPos, endPos, duration);
 
-/**
- * Generate the nav <li>'s and setup the Event Listeners
- * @return {void}
- */
-Stickynav.prototype.generate = function generate () {
-    var this$1 = this;
+      if (elapsed < duration) {
+        requestAnimationFrame(scroll);
+      } else if (callback) {
+        callback.call(to);
+      }
+    };
 
-  var nav = this.handle.querySelector('ul');
+    requestAnimationFrame(scroll);
+  }
 
-  Array.prototype.forEach.call(this.sections, function (section) {
-    var title = section.getAttribute('data-nav');
-    var id = section.id || '';
-    var item = document.createElement('li');
+  // mini querySelectorAll helper fn
+  function $$(els) {
+    return els instanceof NodeList ? Array.prototype.slice.call(els) :
+           els instanceof HTMLElement ? [els] :
+           typeof els === 'string' ? Array.prototype.slice.call(document.querySelectorAll(els)) :
+           [];
+  }
 
-    item.innerHTML = '<a href="#'+id+'">'+ title + '</a>';
-    item.addEventListener('click', function (e) {
-      this$1.items.forEach(function (i) { i.className = ''; });
-      item.classList.add('active');
-      this$1.isScrolling = true;
-      scrollPage(section, this$1.offset, function () { this$1.isScrolling = false });
+  var Stickynav = function Stickynav(options) {
+    if ( options === void 0 ) options={};
+
+    this.handle = $$(options.nav)[0];
+    this.sections = $$(options.sections || document.querySelectorAll('[data-nav]'));
+
+    if (!this.sections || !this.handle) { console.log('StickyNav: missing nav or nav sections.'); return false; }
+
+    this.items = [];
+    this.isScrolling = false;
+    this.currentSection = null;
+    this.ticking = false;
+    this.offset = options.offset || 0;
+
+    new Sticky(this.handle, {
+      boundedBy: options.boundedBy || false,
+      offset: this.offset
     });
 
-    this$1.items.push(item);
-    nav.appendChild(item);
-  });
-};
+    this.generate();
+    this.checkSectionPosition();
 
-/**
- * Update the active nav item on window.scroll. This decouples it from scroll events
- * @return {void}
- */
-Stickynav.prototype.updateActiveItem = function updateActiveItem () {
-  if (!this.ticking && !this.isScrolling) {
-    this.ticking = true;
-    window.requestAnimationFrame(this.checkSectionPosition.bind(this));
-  }
-};
+    window.addEventListener('scroll', this.updateActiveItem.bind(this));
+  };
 
-/**
- * Check each section's getBoundingClientRect to determine which is active
- * @return {void}
- */
-Stickynav.prototype.checkSectionPosition = function checkSectionPosition () {
-    var this$1 = this;
+  /**
+   * Generate the nav <li>'s and setup the Event Listeners
+   * @return {void}
+   */
+  Stickynav.prototype.generate = function generate () {
+      var this$1 = this;
 
-  var i = this.sections.length;
+    var nav = this.handle.querySelector('ul');
 
-  // Find i. Start at end and work back
-  for (i; i--;) {
-    if (~~this$1.sections[i].getBoundingClientRect().top <= this$1.offset) {// note: ~~ is Math.floor
-      break;
+    Array.prototype.forEach.call(this.sections, function (section) {
+      var title = section.getAttribute('data-nav');
+      var id = section.id || '';
+      var item = document.createElement('li');
+
+      item.innerHTML = '<a href="#'+id+'">'+ title + '</a>';
+      item.addEventListener('click', function (e) {
+        this$1.items.forEach(function (i) { i.className = ''; });
+        item.classList.add('active');
+        this$1.isScrolling = true;
+        scrollPage(section, this$1.offset, function () { this$1.isScrolling = false });
+      });
+
+      this$1.items.push(item);
+      nav.appendChild(item);
+    });
+  };
+
+  /**
+   * Update the active nav item on window.scroll. This decouples it from scroll events
+   * @return {void}
+   */
+  Stickynav.prototype.updateActiveItem = function updateActiveItem () {
+    if (!this.ticking && !this.isScrolling) {
+      this.ticking = true;
+      window.requestAnimationFrame(this.checkSectionPosition.bind(this));
     }
-  }
+  };
 
-  // Add active class to currentSection, or remove if nothing is currently active
-  if (i !== this.currentSection) {
-    this.items.forEach(function (item) { item.classList.remove('active'); });
-    this.sections.forEach(function (section) { section.classList.remove('active'); });
+  /**
+   * Check each section's getBoundingClientRect to determine which is active
+   * @return {void}
+   */
+  Stickynav.prototype.checkSectionPosition = function checkSectionPosition () {
+      var this$1 = this;
 
-    if (i >= 0) {
-      this.items[i].classList.add('active');
-      this.sections[i].classList.add('active');
+    var i = this.sections.length;
+
+    // Find i. Start at end and work back
+    for (i; i--;) {
+      if (~~this$1.sections[i].getBoundingClientRect().top <= this$1.offset) {// note: ~~ is Math.floor
+        break;
+      }
     }
 
-    this.currentSection = i;
-  }
+    // Add active class to currentSection, or remove if nothing is currently active
+    if (i !== this.currentSection) {
+      this.items.forEach(function (item) { item.classList.remove('active'); });
+      this.sections.forEach(function (section) { section.classList.remove('active'); });
 
-  this.ticking = false;
-};
+      if (i >= 0) {
+        this.items[i].classList.add('active');
+        this.sections[i].classList.add('active');
+      }
 
-exports.StickyNav = Stickynav;
-exports.Sticky = Sticky;
-exports.Scroll = scrollPage;
+      this.currentSection = i;
+    }
+
+    this.ticking = false;
+  };
+
+  // Custom Event prototype
+  (function () {
+    if (typeof window.CustomEvent === 'function') return false; //If not IE
+
+    function CustomEvent (event, params) {
+      params = params || { bubbles: false, cancelable: false, detail: undefined };
+      var evt = document.createEvent('CustomEvent');
+      evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
+      return evt;
+    }
+
+    CustomEvent.prototype = window.Event.prototype;
+    window.CustomEvent = CustomEvent;
+  })();
+
+  exports.StickyNav = Stickynav;
+  exports.Sticky = Sticky;
+  exports.Scroll = scrollPage;
 
 }((this.window = this.window || {})));
