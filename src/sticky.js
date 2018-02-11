@@ -40,9 +40,13 @@ export default class Sticky {
 
   constructor(element, options) {
     this.element = $(element);
+
     if (!this.element) { return false; }
 
-    this.opts = Object.assign({}, defaults, options);
+    // this.opts = Object.assign({}, defaults, options);
+    this.opts = {};
+    for (let opt in defaults) { this.opts[opt] = defaults[opt]; }
+    for (let opt in options) { this.opts[opt] = options[opt]; }
 
     this.stateSwitcher;
     this.currentState = null;
@@ -58,7 +62,6 @@ export default class Sticky {
       this.setState('normal');
     }
 
-    // window.addEventListener('scroll', this.stateSwitcher.bind(this));    // stateSwitcher changes, so cannot pass (ie. bind directly) like this
     window.addEventListener('scroll', () => { this.stateSwitcher(); });
     window.addEventListener('resize', () => { this.stateSwitcher(); });
   }

@@ -19,50 +19,48 @@ function _customEvent() {
 }
 
 
-/**
- * Object Assign Polyfill
- * reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
- * @return {[type]} [description]
- */
-function _objectAssign() {
-  if (typeof Object.assign != 'function') {
-    // Must be writable: true, enumerable: false, configurable: true
-    Object.defineProperty(Object, 'assign', {
-      value: function assign(target, varArgs) {
-        var arguments$1 = arguments;
- // .length of function is 2
-        // 'use strict';
-        if (target == null) { // TypeError if undefined or null
-          throw new TypeError('Cannot convert undefined or null to object');
-        }
+// /**
+//  * Object Assign Polyfill
+//  * reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
+//  * @return {[type]} [description]
+//  */
+// function _objectAssign() {
+//   if (typeof Object.assign != 'function') {
+//     // Must be writable: true, enumerable: false, configurable: true
+//     Object.defineProperty(Object, 'assign', {
+//       value: function assign(target, varArgs) { // .length of function is 2
+//         // 'use strict';
+//         if (target == null) { // TypeError if undefined or null
+//           throw new TypeError('Cannot convert undefined or null to object');
+//         }
 
-        var to = Object(target);
+//         var to = Object(target);
 
-        for (var index = 1; index < arguments.length; index++) {
-          var nextSource = arguments$1[index];
+//         for (var index = 1; index < arguments.length; index++) {
+//           var nextSource = arguments[index];
 
-          if (nextSource != null) { // Skip over if undefined or null
-            for (var nextKey in nextSource) {
-              // Avoid bugs when hasOwnProperty is shadowed
-              if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
-                to[nextKey] = nextSource[nextKey];
-              }
-            }
-          }
-        }
-        return to;
-      },
-      writable: true,
-      configurable: true
-    });
-  }
-}
+//           if (nextSource != null) { // Skip over if undefined or null
+//             for (var nextKey in nextSource) {
+//               // Avoid bugs when hasOwnProperty is shadowed
+//               if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+//                 to[nextKey] = nextSource[nextKey];
+//               }
+//             }
+//           }
+//         }
+//         return to;
+//       },
+//       writable: true,
+//       configurable: true
+//     });
+//   }
+// }
 
 
 
 function polyfill() {
   _customEvent();
-  _objectAssign();
+  // _objectAssign();
 }
 
 polyfill();
@@ -87,18 +85,23 @@ var stickyEvent = new CustomEvent('sticky', {
 
 /**
  * Set up a sticky element that attaches / detaches to top of viewport.
- * @param {HTMLElement} element  The element to sticky-ify
- * @param {Mixed} options        The bounding element for the sticky element,
- *                               the offset at which to activate
+ * @param {HTMLElement} element The element to sticky-ify
+ * @param {Object} options The options object
+ * @param {boolean|HTMLElement} options.boundedBy Bounding element for the sticky element, or "true" to use the parent node
+ * @param {number} options.offset An offset from the top at which to toggle "stickiness"
  * @return {void}
  */
 var Sticky = function Sticky(element, options) {
   var this$1 = this;
 
   this.element = $(element);
+
   if (!this.element) { return false; }
 
-  this.opts = Object.assign({}, defaults, options);
+  // this.opts = Object.assign({}, defaults, options);
+  this.opts = {};
+  for (var opt in defaults) { this$1.opts[opt] = defaults[opt]; }
+  for (var opt$1 in options) { this$1.opts[opt$1] = options[opt$1]; }
 
   this.stateSwitcher;
   this.currentState = null;
@@ -114,7 +117,6 @@ var Sticky = function Sticky(element, options) {
     this.setState('normal');
   }
 
-  // window.addEventListener('scroll', this.stateSwitcher.bind(this));  // stateSwitcher changes, so cannot pass (ie. bind directly) like this
   window.addEventListener('scroll', function () { this$1.stateSwitcher(); });
   window.addEventListener('resize', function () { this$1.stateSwitcher(); });
 };
@@ -166,9 +168,9 @@ function easeInOutCubic(t, b, c, d) {
 
 /**
  * Scroll the page to a particular page anchor
- * @param  {String} to: The id of the element to scroll to.
- * @param  {Integer} offset: A scrolling offset.
- * @param  {Function} callback: Function to apply after scrolling
+ * @param {HTMLElement} to The element to scroll to.
+ * @param {number} offset A scrolling offset.
+ * @param {function} callback Function to apply after scrolling
  * @return {void}
  */
 function scrollPage(to, offset, callback) {
