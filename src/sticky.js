@@ -20,9 +20,10 @@ const defaults = {
 
 /**
  * Set up a sticky element that attaches / detaches to top of viewport.
- * @param {HTMLElement} element  The element to sticky-ify
- * @param {Mixed} options        The bounding element for the sticky element,
- *                               the offset at which to activate
+ * @param {HTMLElement} element The element to sticky-ify
+ * @param {Object} options The options object
+ * @param {boolean|HTMLElement} options.boundedBy Bounding element for the sticky element, or "true" to use the parent node
+ * @param {number} options.offset An offset from the top at which to toggle "stickiness"
  * @return {void}
  */
 export default class Sticky {
