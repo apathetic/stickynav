@@ -2,14 +2,75 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-/*
- * Sticky
- * https://github.com/apathetic/stickynav/
- *
- * Copyright (c) 2012, 2016 Wes Hatch
- * Licensed under the MIT license.
- *
+/**
+ * Custom Event Polyfill
+ * reference: https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent
+ * @return {[type]} [description]
  */
+function _customEvent() {
+  if (typeof window.CustomEvent === 'function') { return false; }
+
+  function CustomEvent ( event, params ) {
+    params = params || { bubbles: false, cancelable: false, detail: undefined };
+    var evt = document.createEvent( 'CustomEvent' );
+    evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
+    return evt;
+   }
+
+  CustomEvent.prototype = window.Event.prototype;
+
+  window.CustomEvent = CustomEvent;
+}
+
+
+/**
+ * Object Assign Polyfill
+ * reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
+ * @return {[type]} [description]
+ */
+function _objectAssign() {
+  if (typeof Object.assign != 'function') {
+    // Must be writable: true, enumerable: false, configurable: true
+    Object.defineProperty(Object, 'assign', {
+      value: function assign(target, varArgs) {
+        var arguments$1 = arguments;
+ // .length of function is 2
+        // 'use strict';
+        if (target == null) { // TypeError if undefined or null
+          throw new TypeError('Cannot convert undefined or null to object');
+        }
+
+        var to = Object(target);
+
+        for (var index = 1; index < arguments.length; index++) {
+          var nextSource = arguments$1[index];
+
+          if (nextSource != null) { // Skip over if undefined or null
+            for (var nextKey in nextSource) {
+              // Avoid bugs when hasOwnProperty is shadowed
+              if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+                to[nextKey] = nextSource[nextKey];
+              }
+            }
+          }
+        }
+        return to;
+      },
+      writable: true,
+      configurable: true
+    });
+  }
+}
+
+
+
+function polyfill() {
+  _customEvent();
+  _objectAssign();
+}
+
+polyfill();
+
 
 // mini querySelector helper fn
 function $(el) {
@@ -21,6 +82,12 @@ var defaults = {
   offset: 0,
   boundedBy: false //  Defaults to the parent, but can be any element in the page.
 }
+
+// Sticky Event
+var stickyEvent = new CustomEvent('sticky', {
+  bubbles: true
+});
+
 
 /**
  * Set up a sticky element that attaches / detaches to top of viewport.
@@ -38,7 +105,7 @@ var Sticky = function Sticky(element, options) {
   this.opts = Object.assign({}, defaults, options);
 
   this.stateSwitcher;
-  this.currentState = '_';
+  this.currentState = null;
   this.determine = 'normal';
   this.bounded = !!this.opts.boundedBy;
   this.parent = (typeof this.opts.boundedBy === 'boolean') ? this.element.parentNode : $(this.opts.boundedBy);
@@ -90,6 +157,10 @@ Sticky.prototype.setState = function setState (state) {
   this.element.classList.add(state);
   this.currentState = state;
   this.stateSwitcher = this[state]; // stateSwitcher will point at an internal fn
+
+  if (state === 'sticky') {
+    this.element.dispatchEvent(stickyEvent); // , { detail: state });
+  }
 };
 
 function easeInOutCubic(t, b, c, d) {
@@ -132,6 +203,7 @@ function scrollPage(to, offset, callback) {
 // mini querySelectorAll helper fn
 function $$(els) {
   return els instanceof NodeList ? Array.prototype.slice.call(els) :
+         els instanceof HTMLElement ? [els] :
          typeof els === 'string' ? Array.prototype.slice.call(document.querySelectorAll(els)) :
          [];
 }
@@ -139,7 +211,7 @@ function $$(els) {
 var Stickynav = function Stickynav(options) {
   if ( options === void 0 ) options={};
 
-  this.handle = document.querySelector(options.nav);
+  this.handle = $$(options.nav)[0];
   this.sections = $$(options.sections || document.querySelectorAll('[data-nav]'));
 
   if (!this.sections || !this.handle) { console.log('StickyNav: missing nav or nav sections.'); return false; }
@@ -180,7 +252,7 @@ Stickynav.prototype.generate = function generate () {
       this$1.items.forEach(function (i) { i.className = ''; });
       item.classList.add('active');
       this$1.isScrolling = true;
-      scrollPage(section, 0, function () { this$1.isScrolling = false });
+      scrollPage(section, this$1.offset, function () { this$1.isScrolling = false });
     });
 
     this$1.items.push(item);

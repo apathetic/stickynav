@@ -13,6 +13,7 @@ import scrollPage from './scrollPage.js';
 // mini querySelectorAll helper fn
 function $$(els) {
   return els instanceof NodeList ? Array.prototype.slice.call(els) :
+         els instanceof HTMLElement ? [els] :
          typeof els === 'string' ? Array.prototype.slice.call(document.querySelectorAll(els)) :
          [];
 }
@@ -20,7 +21,7 @@ function $$(els) {
 export default class Stickynav {
 
   constructor(options={}) {
-    this.handle = document.querySelector(options.nav);
+    this.handle = $$(options.nav)[0];
     this.sections = $$(options.sections || document.querySelectorAll('[data-nav]'));
 
     if (!this.sections || !this.handle) { console.log('StickyNav: missing nav or nav sections.'); return false; }
@@ -59,7 +60,7 @@ export default class Stickynav {
         this.items.forEach((i) => { i.className = ''; });
         item.classList.add('active');
         this.isScrolling = true;
-        scrollPage(section, 0, () => { this.isScrolling = false });
+        scrollPage(section, this.offset, () => { this.isScrolling = false });
       });
 
       this.items.push(item);
